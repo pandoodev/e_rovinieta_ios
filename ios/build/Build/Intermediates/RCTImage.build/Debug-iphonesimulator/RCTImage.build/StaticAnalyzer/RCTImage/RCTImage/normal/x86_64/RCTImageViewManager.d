@@ -1,0 +1,30 @@
+dependencies: \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/node_modules/react-native/Libraries/Image/RCTImageViewManager.m \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/node_modules/react-native/Libraries/Image/RCTImageViewManager.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTViewManager.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeModule.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTConvert.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAnimationType.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBorderStyle.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTLog.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAssert.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTPointerEvents.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTTextDecorationLineType.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTEventDispatcher.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridge.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeDelegate.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTJavaScriptLoader.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTFrameUpdate.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTInvalidating.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/UIView+React.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTComponent.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTImageSource.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/node_modules/react-native/Libraries/Image/RCTImageLoader.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTResizeMode.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTURLRequestHandler.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTURLRequestDelegate.h \
+  /Users/mihaibaba/Desktop/workspace/erovinieta_ios/node_modules/react-native/Libraries/Image/RCTImageView.h

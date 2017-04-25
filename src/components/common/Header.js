@@ -1,20 +1,55 @@
 // Import libraries for making a component
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, {Component} from 'react';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { Actions, ActionConst } from 'react-native-router-flux';
+
 
 // Make a component
-const Header = (props) => {
-  const { textStyle, viewStyle } = styles;
+class Header extends Component{
 
-  return (
-    <View style={viewStyle}>
-      <Text style={textStyle}>{props.headerText}</Text>
-    </View>
-  );
+
+  render(){
+
+    return (
+      <View style={styles.viewStyle}>
+
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <Text style={styles.textStyle}>{this.props.headerText}</Text>
+
+          {<TouchableOpacity underlayColor={'rgba(255, 255, 255, 0.2)'}
+            onPress={() => { this.goBackFunction(); }}
+            style={styles.backArrowStyle}>
+            <Image style={{width:24,height:24}} source={require('../../../assets/back_arrow_blue.png')} />
+          </TouchableOpacity>}
+
+
+        </View>
+
+      </View>
+    );
+
+  }
+
+
+  goBackFunction() {
+    Actions.pop();
+  }
+
 };
 
 const styles = {
+
+  backArrowStyle: {
+
+    justifyContent: 'flex-end',     
+    marginRight:5,
+    width: 25,
+    height: 25,    
+    
+  },
   viewStyle: {
+    marginTop:19,
+    flexDirection:'row',
     backgroundColor: '#222222',
     justifyContent: 'center',
     alignItems: 'center',
@@ -25,9 +60,13 @@ const styles = {
     elevation: 2,
     position: 'relative'
   },
-  textStyle: {
+  textStyle: {       
+    flex:1,
+    marginLeft:30,
     fontSize: 20,
-    color: 'white'
+    flexDirection:'row',
+    color: 'white',
+    textAlign:'center',
   }
 };
 

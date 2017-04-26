@@ -142,7 +142,7 @@ class AddProfile extends Component {
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
             querystring.stringify({
                 tag: 'profile',
-                device: 'android',
+                device: 'ios',
                 token: this.props.responseData.user.token
             }), {
                 headers: {
@@ -194,7 +194,7 @@ class AddProfile extends Component {
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
             querystring.stringify({
                 tag: 'profile_new',
-                device: 'android',
+                device: 'ios',
                 token: self.props.responseData.user.token,
                 type: 1,
                 firstName: self.state.firstName,
@@ -257,7 +257,7 @@ class AddProfile extends Component {
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
             querystring.stringify({
                 tag: 'profile_new',
-                device: 'android',
+                device: 'ios',
                 token: self.props.responseData.user.token,
                 type: 0,
                 companyName: self.state.companyName,

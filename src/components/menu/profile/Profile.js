@@ -170,7 +170,7 @@ class Profile extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'profile_delete',
-				device: 'android',
+				device: 'ios',
 				token: this.props.responseData.user.token,
 				pid: this.state.profiles[index].id
 			}), {
@@ -212,7 +212,7 @@ class Profile extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'profile',
-				device: 'android',
+				device: 'ios',
 				token: this.props.responseData.user.token
 			}), {
 				headers: {
@@ -351,7 +351,7 @@ const styles = {
 	},
 	profileTypeStyle: {
 		paddingTop: 5,
-		flex: 1.5,
+		flex: 2,
 		justifyContent: 'center',
 		alignItems: 'center',
 		paddingLeft: 5,

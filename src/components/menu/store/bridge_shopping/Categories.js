@@ -87,7 +87,7 @@ class Categories extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'profile',
-				device: 'android',
+				device: 'ios',
 				token: this.props.infoClientLogin.infoClientLogin.token
 			}), {
 				headers: {
@@ -119,7 +119,7 @@ getOrderHistory()
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'orders',
-				device: 'android',
+				device: 'ios',
 				token: this.props.infoClientLogin.infoClientLogin.token
 			}), {
 				headers: {
@@ -184,7 +184,7 @@ getOrderHistory()
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'initiate',
-				device: 'android',
+				device: 'ios',
 				token: argToken,
 				profileID: argProfileID,
 				categoryID: argCategoryID,

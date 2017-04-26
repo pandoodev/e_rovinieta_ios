@@ -101,7 +101,7 @@ class LoginForm extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'login',
-				device: 'android',
+				device: 'ios',
 				password: hashedPass,
 				username: username
 			}), {

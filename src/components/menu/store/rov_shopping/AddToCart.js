@@ -139,6 +139,7 @@ class AddtoCart extends Component {
 								"Content-Type": "application/x-www-form-urlencoded"
 							}
 						}).then(function (response) {
+							console.log(response.data)
 							if (response.data.success) {
 
 								var valabilitiesWithPrices = [];
@@ -169,7 +170,7 @@ class AddtoCart extends Component {
 								})
 								self.setState({ arrValabilitiesLabels: arrValabilitiesLabels });
 								self.setState({ arrValabilitiesValues: arrValabilitiesValues });
-								self.setState({ priceID: valabilitiesWithPrices[0].priceID });
+								self.setState({ nrDays: valabilitiesWithPrices[0].priceID });
 								self.setState({ selectedValabilityLabel: valabilitiesWithPrices[0].description });
 								self.setState({ error: '', loadingPrices: false, buttonLoading: false });
 
@@ -212,7 +213,7 @@ class AddtoCart extends Component {
 						ref={'valabilities'}
 						options={this.state.arrValabilitiesValues}
 						labels={this.state.arrValabilitiesLabels}
-						onSubmit={(days) => this.setState({ priceID: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
+						onSubmit={(days) => this.setState({ nrDays: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
 						itemStyle={{
 							fontSize: 25,
 							color: 'black',
@@ -226,7 +227,37 @@ class AddtoCart extends Component {
 		}
 
 	}
+renderCountries() {
+		if (this.state.loading || this.state.loading == undefined) {
+			return <Spinner size='small' />;
+		}
+		return (
+			<View style={styles.pickerContainerStyle}>
 
+				<Text
+					style={styles.textStyle}
+					onPress={() => {
+						this.refs.countries.show();
+					}}
+				>
+					{this.state.selectedCountryLabel}
+				</Text>
+
+				<SimplePicker
+					ref={'countries'}
+					options={this.state.arrCountriesValues}
+					labels={this.state.arrCountriesLabels}
+					onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel:this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
+					itemStyle={{
+						fontSize: 25,
+						color: 'black',
+						textAlign: 'center',
+						fontWeight: 'bold',
+					}}
+				/>
+			</View>
+		);
+	}
 	getPrices() {
 		var self = this;
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
@@ -303,37 +334,7 @@ class AddtoCart extends Component {
 
 		//console.log(this.props.responseData);
 	}
-	renderCountries() {
-		if (this.state.loading || this.state.loading == undefined) {
-			return <Spinner size='small' />;
-		}
-		return (
-			<View style={styles.pickerContainerStyle}>
-
-				<Text
-					style={styles.textStyle}
-					onPress={() => {
-						this.refs.countries.show();
-					}}
-				>
-					{this.state.selectedCountryLabel}
-				</Text>
-
-				<SimplePicker
-					ref={'countries'}
-					options={this.state.arrCountriesValues}
-					labels={this.state.arrCountriesLabels}
-					onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel:this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
-					itemStyle={{
-						fontSize: 25,
-						color: 'black',
-						textAlign: 'center',
-						fontWeight: 'bold',
-					}}
-				/>
-			</View>
-		);
-	}
+	
 	renderButton() {
 		if (this.state.buttonLoading) {
 			return <Spinner size='small' />;
@@ -358,7 +359,7 @@ class AddtoCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'profile',
-				device: 'android',
+				device: 'ios',
 				token: this.props.responseData.user.token
 			}), {
 				headers: {
@@ -574,7 +575,7 @@ class AddtoCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'categories',
-				device: 'android',
+				device: 'ios',
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -664,7 +665,7 @@ class AddtoCart extends Component {
 
 							</CardSection>
 							<CardSection>
-								<Text style={styles.textStyle}> Valabilitate </Text>
+								<Text style={styles.textStyle}>Valabilă</Text>
 								{this.renderValabilitiesAndPrices()}
 
 							</CardSection>

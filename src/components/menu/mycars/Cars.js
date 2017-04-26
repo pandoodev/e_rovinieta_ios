@@ -232,7 +232,7 @@ class Cars extends Component {
                     onPress={() => {
                       Actions.buy({
                         responseData: self.props.responseData, category: self.getCategoryById(o.category),
-                        categoryID: o.category, chasisNo: o.chasisNo, plateNo: o.plateNo
+                        categoryID: o.category, chasisNo: o.chasisNo, plateNo: o.plateNo, country:o.country
                       })
                     }}
                     key={4}

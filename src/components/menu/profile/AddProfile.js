@@ -7,6 +7,7 @@ import Header from '../../common/Header';
 import axios from 'axios';
 import querystring from 'query-string';
 import { Actions } from 'react-native-router-flux';
+import SimplePicker from 'react-native-simple-picker';
 
 
 //menu
@@ -14,17 +15,63 @@ const SideMenu = require('react-native-side-menu');
 const Menu = require('../../common/Menu');
 import MenuButton from '../../common/MenuButton';
 //menu
-
+const profileTypes=["Persoană Juridică","Persoană Fizică" ];
+const profileTypesId=[0,1];
 class AddProfile extends Component {
     state = {
-        profileType: 1, country: 1, county: 1, counties: [], countries: [], firstName: '', lastName: '', city: '', street: '', CNP: null, error: "", loading: false, buttonLoading: false,
-        companyName: '', companyCity: '', cuiCode: null, jCode: null, companyAddress: ''
+        profileType: 1, 
+        country: 1, 
+        county: 1, 
+        counties: [], 
+        countries: [], 
+        firstName: '', 
+        lastName: '', 
+        city: '',
+         street: '',
+          CNP: null,
+           error: "",
+            loading: false,
+             buttonLoading: false,
+        companyName: '',
+         companyCity: '',
+          cuiCode: null,
+           jCode: null, 
+           companyAddress: '',
+             arrCountriesValues: [],
+        arrCountriesLabels: [],
+        arrCountiesValues: [],
+        arrCountiesLabels: [],
+        selectedCountryLabel: 'ROMANIA',
+        selectedCountyLabel: 'Iasi'
+
     };
     constructor(props) {
         super(props)
         this.state = {
-            profileType: 1, country: 1, county: 1, counties: [], countries: [], firstName: '', lastName: '', city: '', street: '', CNP: null, error: "", loading: false, buttonLoading: false,
-            companyName: '', companyCity: '', cuiCode: null, jCode: null, companyAddress: ''
+            profileType: 1, 
+            country: 1,
+             county: 1,
+              counties: [], 
+              countries: [], 
+              firstName: '', 
+              lastName: '', 
+              city: '', 
+              street: '',
+              CNP: null, 
+              error: "", 
+              loading: false, 
+              buttonLoading: false,
+            companyName: '',
+             companyCity: '', 
+             cuiCode: null, 
+             jCode: null, 
+             companyAddress: '',
+               arrCountriesValues: [],
+        arrCountriesLabels: [],
+        arrCountiesValues: [],
+        arrCountiesLabels: [],
+        selectedCountryLabel: 'ROMANIA',
+        selectedCountyLabel: 'Iasi'
         }
     }
 
@@ -294,95 +341,144 @@ class AddProfile extends Component {
     }
     getCountries() {
         var self = this;
-        this.setState({ loading: true });
-        axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'countries',
-                device: 'android'
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
+        querystring.stringify({
+            tag: 'countries',
+            device: 'android'
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                var arrCountriesLabels = [];
+                var arrCountriesValues = [];
+                response.data.countries.forEach(function (countrieInfo) {
+                    arrCountriesLabels.push(countrieInfo['name']);
+                    arrCountriesValues.push(countrieInfo['id']);
+                }, this);
+                self.setState({ arrCountriesLabels: arrCountriesLabels });
+                self.setState({ arrCountriesValues: arrCountriesValues });
+                if (self.props.profileToModify != undefined && self.props.profileToModify != '' && self.props.profileToModify.country != undefined && self.props.profileToModify.country != '') {
+                    self.setState({ selectedCountryLabel: arrCountriesLabels[arrCountriesValues.indexOf(self.props.profileToModify.country)] })
+                    console.log(self.props.profileToModify.country)
+                    console.log(self.state.selectedCountryLabel)
                 }
-            }).then(function (response) {
-                if (response.data.success) {
-                    var arrCountries = [];
-                    response.data.countries.forEach(function (countrieInfo) {
-                        arrCountries.push([countrieInfo['name'], countrieInfo['id']]);
-                    }, this);
-                    self.state.countries = arrCountries;
-                    self.setState({ error: '', loading: false, buttonLoading: false });
-                }
-                if (response.data.success === 0) {
-                    console.log("unsuccess from getCountries");
-                }
-            });
-
+                self.setState({ error: '', loading: false });
+            }
+            if (response.data.success === 0) {
+                console.log("unsuccess from getCountries");
+            }
+        });
+        
     }
     getCounties() {
         var self = this;
-        this.setState({ loading: true });
-
+        self.setState({ loading: true });
+        
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'counties',
-                device: 'android'
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+        querystring.stringify({
+            tag: 'counties',
+            device: 'android'
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                var arrCountiesLabels = [];
+				var arrCountiesValues = [];
+                response.data.counties.forEach(function (countieInfo) {
+                    arrCountiesLabels.push(countieInfo['name']);
+					arrCountiesValues.push(countieInfo['id']);
+                }, this);
+                 if (self.props.profileToModify != undefined && self.props.profileToModify != '' && self.props.profileToModify.county != undefined && self.props.profileToModify.county != '') {
+                    self.setState({ selectedCountyLabel: arrCountiesLabels[arrCountiesValues.indexOf(self.props.profileToModify.county)] })
+                    console.log(self.props.profileToModify.county)
+                    console.log(self.state.selectedCountyLabel)
+                    console.log(self.state.selectedCountyLabel)
+                    
                 }
-            }).then(function (response) {
-                if (response.data.success) {
-                    var arrCounties = [];
-                    response.data.counties.forEach(function (countrieInfo) {
-                        arrCounties.push([countrieInfo['name'], countrieInfo['id']]);
-                    }, this);
-                    self.state.counties = arrCounties;
-                    self.setState({ error: '', loading: false, buttonLoading: false });
-                    console.log(response.data);
-                }
-                if (response.data.success === 0) {
-                    console.log("unsuccess from getCounties");
-                }
-            });
-
+                self.setState({ arrCountiesLabels: arrCountiesLabels });
+				self.setState({ arrCountiesValues: arrCountiesValues });
+                self.setState({ error: '', loading: false, buttonLoading: false });
+               
+            }
+            if (response.data.success === 0) {
+                console.log("unsuccess from getCounties");
+            }
+        });
+        
     }
-
-
+    
+    
     renderCountries() {
         if (this.state.loading || this.state.loading == undefined) {
-            return <Spinner size='small' />;
+            return (
+            <Spinner size='small' />);
         }
         return (
-            <View style={styles.pickerContainerStyle}>
-
-                <Picker
-                    style={styles.pickerStyle}
-                    selectedValue={this.state.country}
-                    onValueChange={(loc) => this.setState({ country: loc })}>
-                    {
-                        this.state.countries.map(function (o, i) {
-
-                            return <Picker.Item value={o[1]} label={o[0]} key={i} />
-                        })}</Picker>
-            </View>
+        <View style={styles.pickerContainerStyle}>
+        
+        
+        <Text
+        style={styles.textStyle}
+        onPress={() => {
+            this.refs.countries.show();
+        }}
+        >
+        {this.state.selectedCountryLabel}
+        </Text>
+        
+        <SimplePicker
+        ref={'countries'}
+        options={this.state.arrCountriesValues}
+        labels={this.state.arrCountriesLabels}
+        onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel: this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
+        itemStyle={{
+            fontSize: 25,
+            color: 'black',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }}
+        />
+        </View>
         );
     }
+
+
+   
     renderCounties() {
-        if (this.state.loading || this.state.loading == undefined) {
+        if (this.state.loading || this.state.loading == undefined) 
+        {
             return <Spinner size='small' />;
         }
         return (
-            <View style={styles.pickerContainerStyle}>
-
-                <Picker
-                    style={styles.pickerStyle}
-                    selectedValue={this.state.county}
-                    onValueChange={(loc) => this.setState({ county: loc })}>
-                    {this.state.counties.map(function (o, i) {
-
-                        return <Picker.Item value={o[1]} label={o[0]} key={i} />
-                    })}</Picker>
-            </View>
+        <View style={styles.pickerContainerStyle}>
+        
+        
+        <Text
+        style={styles.textStyle}
+        onPress={() => {
+            this.refs.counties.show();
+        }}
+        >
+        {this.state.selectedCountyLabel}
+        </Text>
+        
+        <SimplePicker
+        ref={'counties'}
+        options={this.state.arrCountiesValues}
+        labels={this.state.arrCountiesLabels}
+        onSubmit={(loc) => this.setState({ county: loc, selectedCountyLabel: this.state.arrCountiesLabels[this.state.arrCountiesValues.indexOf(loc)] })}
+        itemStyle={{
+            fontSize: 25,
+            color: 'black',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }}
+        />
+        </View>
         );
     }
 
@@ -529,13 +625,28 @@ class AddProfile extends Component {
                             <CardSection>
                                 <Text style={styles.textStyle}> Tip Profil </Text>
                                 <View style={styles.pickerContainerStyle}>
-                                    <Picker
-                                        style={styles.pickerStyle}
-                                        selectedValue={this.state.profileType}
-                                        onValueChange={(type) => this.setState({ profileType: type })}>
-                                        <Picker.Item label="Persoană Fizică" value="1" />
-                                        <Picker.Item label="Persoană Juridică" value="0" />
-                                    </Picker>
+                                          <Text
+        style={styles.textStyle}
+        onPress={() => {
+            this.refs.profile.show();
+        }}
+        >
+        {profileTypes[this.state.profileType]}
+        </Text>
+        
+        <SimplePicker
+        ref={'profile'}
+        labels={profileTypes}
+        options={profileTypesId}
+        onSubmit={(type) => this.setState({ profileType: type })}
+        itemStyle={{
+            fontSize: 25,
+            color: 'black',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }}
+        />
+                                    
                                 </View>
                             </CardSection>
                             {this.showForm()}

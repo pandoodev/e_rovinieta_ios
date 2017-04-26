@@ -410,7 +410,7 @@ const styles = {
 	},
 	textStyle: {
 		paddingTop: -4,
-		marginBottom: 10,
+		marginBottom: 17,
 
 
 	},

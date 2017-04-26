@@ -7,7 +7,7 @@ import Header from '../../../common/Header';
 import axios from 'axios';
 import querystring from 'query-string';
 import { Actions } from 'react-native-router-flux';
-
+import SimplePicker from 'react-native-simple-picker';
 
 //menu
 const SideMenu = require('react-native-side-menu');
@@ -18,6 +18,7 @@ import MenuButton from '../../../common/MenuButton';
 
 
 inCartRovignetteKey = null;
+
 
 class AddtoCart extends Component {
 	state = {
@@ -36,31 +37,48 @@ class AddtoCart extends Component {
 		buttonLoading: false,
 		selectedItem: 'Dashboard',
 	};
+
 	constructor(props) {
 		super(props)
-		this.state = { date: this.getCurerntDate(), buttonLoading: true, vehicleNo:this.getVehicleNo(),chasisNo:this.getChasisNo()  }
+		this.state = {
+			date: this.getCurerntDate(),
+			buttonLoading: true,
+			vehicleNo: this.getVehicleNo(),
+			chasisNo: this.getChasisNo(),
+			country: this.getCountryId(),
+			arrCountriesValues: [],
+			arrCountriesLabels: [],
+			arrValabilitiesValues: [],
+			arrValabilitiesLabels: [],
+			selectedCountryLabel: 'ROMANIA',
+			selectedValabilityLabel: ''
+
+		}
 		inCartRovignetteKey = this.props.responseData.user.token;
 
 	}
-getVehicleNo()
-{
-	console.log("getVehicleNo")
-	
-	if(this.props.plateNo!=undefined&&this.props.plateNo!='')
-	{
-		console.log("getVehicleNo"+this.props.plateNo)
-		return this.props.plateNo
+	getVehicleNo() {
+
+		if (this.props.plateNo != undefined && this.props.plateNo != '') {
+			return this.props.plateNo
+		}
+		return '';
 	}
-	return '';
-}
-getChasisNo()
-{
-	if(this.props.chasisNo!=undefined&&this.props.chasisNo!='')
-	{
-		return this.props.chasisNo
+	getCountryId() {
+
+		if (this.props.country != undefined && this.props.country != '') {
+			return this.props.country
+		}
+		return '1';
 	}
-	return '';
-}
+
+
+	getChasisNo() {
+		if (this.props.chasisNo != undefined && this.props.chasisNo != '') {
+			return this.props.chasisNo
+		}
+		return '';
+	}
 
 	//Display pop-up message to the user
 	message(title, content) {
@@ -124,6 +142,8 @@ getChasisNo()
 							if (response.data.success) {
 
 								var valabilitiesWithPrices = [];
+								var arrValabilitiesLabels = [];
+								var arrValabilitiesValues = [];
 
 								for (x in valabilities) {
 									valab = valabilities[x];
@@ -142,7 +162,15 @@ getChasisNo()
 								}
 
 								self.state.pricesAndValabilities = valabilitiesWithPrices;
+
+								self.state.pricesAndValabilities.map(function (o, i) {
+									arrValabilitiesLabels.push(o.description);
+									arrValabilitiesValues.push(o.priceID);
+								})
+								self.setState({ arrValabilitiesLabels: arrValabilitiesLabels });
+								self.setState({ arrValabilitiesValues: arrValabilitiesValues });
 								self.setState({ priceID: valabilitiesWithPrices[0].priceID });
+								self.setState({ selectedValabilityLabel: valabilitiesWithPrices[0].description });
 								self.setState({ error: '', loadingPrices: false, buttonLoading: false });
 
 							}
@@ -171,17 +199,27 @@ getChasisNo()
 			return (
 				<View style={styles.pickerContainerStyle}>
 
-					<Picker
-						style={styles.pickerStyle}
-						selectedValue={this.state.priceID}
-						onValueChange={(days) => this.setState({ priceID: days })}>
+					<Text
+						style={styles.textStyle}
+						onPress={() => {
+							this.refs.valabilities.show();
+						}}
+					>
+						{this.state.selectedValabilityLabel}
+					</Text>
 
-						{this.state.pricesAndValabilities.map(function (o, i) {
-
-							return <Picker.Item value={o.priceID} label={o.description} key={o.priceID} />
-						})}
-
-					</Picker>
+					<SimplePicker
+						ref={'valabilities'}
+						options={this.state.arrValabilitiesValues}
+						labels={this.state.arrValabilitiesLabels}
+						onSubmit={(days) => this.setState({ priceID: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
+						itemStyle={{
+							fontSize: 25,
+							color: 'black',
+							textAlign: 'center',
+							fontWeight: 'bold',
+						}}
+					/>
 				</View>
 			);
 
@@ -211,8 +249,6 @@ getChasisNo()
 
 	}
 
-
-
 	getCountries() {
 		var self = this;
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
@@ -225,11 +261,18 @@ getChasisNo()
 				}
 			}).then(function (response) {
 				if (response.data.success) {
-					var arrCountries = [];
+					var arrCountriesLabels = [];
+					var arrCountriesValues = [];
 					response.data.countries.forEach(function (countrieInfo) {
-						arrCountries.push(countrieInfo['name']);
+						arrCountriesLabels.push(countrieInfo['name']);
+						arrCountriesValues.push(countrieInfo['id']);
 					}, this);
-					self.state.countries = arrCountries;
+					self.setState({ arrCountriesLabels: arrCountriesLabels });
+					self.setState({ arrCountriesValues: arrCountriesValues });
+					if (self.props.country != undefined && self.props.country != '') {
+						self.setState({ selectedCountryLabel: arrCountriesLabels[self.state.arrCountriesValues.indexOf(self.props.country)] })
+						
+					}
 					self.setState({ error: '', loading: false });
 				}
 				if (response.data.success === 0) {
@@ -247,7 +290,7 @@ getChasisNo()
 	}
 
 	componentWillMount() {
-		this.setState({ startDate: this.getCurerntDate(), country: "1", nrDays: "1", error: "" });
+		this.setState({ startDate: this.getCurerntDate(), nrDays: "1", error: "" });
 		this.getCountries();
 		this.getProfileID();
 		this.getValabilities();
@@ -267,14 +310,27 @@ getChasisNo()
 		return (
 			<View style={styles.pickerContainerStyle}>
 
-				<Picker
-					style={styles.pickerStyle}
-					selectedValue={this.state.country}
-					onValueChange={(loc) => this.setState({ country: loc })}>
-					{this.state.countries.map(function (o, i) {
+				<Text
+					style={styles.textStyle}
+					onPress={() => {
+						this.refs.countries.show();
+					}}
+				>
+					{this.state.selectedCountryLabel}
+				</Text>
 
-						return <Picker.Item value={i} label={o} key={i} />
-					})}</Picker>
+				<SimplePicker
+					ref={'countries'}
+					options={this.state.arrCountriesValues}
+					labels={this.state.arrCountriesLabels}
+					onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel:this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
+					itemStyle={{
+						fontSize: 25,
+						color: 'black',
+						textAlign: 'center',
+						fontWeight: 'bold',
+					}}
+				/>
 			</View>
 		);
 	}
@@ -332,7 +388,10 @@ getChasisNo()
 	}
 
 	addToCartButton() {
-		this.setState({ buttonLoading: true });
+		//this.setState({ buttonLoading: true });
+		console.log(this.state.nrDays + 'nrDays');
+		console.log(this.state.country + 'country');
+		console.log(this.state.startDate + 'startDate');
 
 		if (this.checkIfNotEmpty() == 1) {
 			this.validateRovignette(
@@ -400,6 +459,7 @@ getChasisNo()
 		];
 		var self = this;
 		var aux = rovignetteInfo;
+		console.table(rovignetteInfo);
 
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify(
@@ -413,6 +473,7 @@ getChasisNo()
 		).then(function (response) {
 
 			self.setState({ buttonLoading: false });
+			console.log(response.data);
 
 			if (response.data.success) {
 				self.appendIfNotEmpty(inCartRovignetteKey, rovignetteInfo);
@@ -513,15 +574,15 @@ getChasisNo()
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'categories',
-				device: 'android',				
+				device: 'android',
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
 				}
 			}).then(function (response) {
-				if (response.data.success) {	
+				if (response.data.success) {
 
-					console.log("categories");			
+					console.log("categories");
 					console.log(response.data);
 					console.log("categories");
 
@@ -552,7 +613,7 @@ getChasisNo()
 					{/*Content start */}
 					<Header headerText={this.props.category} />
 					<ScrollView >
-					
+
 						<Card >
 							<Text style={styles.pageTitleStyle}> {this.props.categoryDescription}</Text>
 							<CardSection >
@@ -692,7 +753,7 @@ const styles = {
 		paddingLeft: 10,
 		marginBottom: -8,
 		paddingRight: 10,
-		
+
 	}
 };
 

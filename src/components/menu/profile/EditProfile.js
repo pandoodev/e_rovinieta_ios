@@ -10,6 +10,8 @@ import Header from '../../common/Header';
 import axios from 'axios';
 import querystring from 'query-string';
 import { Actions } from 'react-native-router-flux';
+import SimplePicker from 'react-native-simple-picker';
+
 
 
 //menu
@@ -19,43 +21,87 @@ import MenuButton from '../../common/MenuButton';
 //menu
 
 class EditProfile extends Component {
-
+    
     state = {
-        profileType: 1, country: 1, county: 1, counties: [], countries: [], firstName: '', lastName: '', city: '', street: '', CNP: null, error: "", loading: false, buttonLoading: false,
-        companyName: '', companyCity: '', cuiCode: null, jCode: null, companyAddress: ''
+        profileType: 1,
+        country: 1,
+        county: 1,
+        counties: [],
+        countries: [],
+        firstName: '',
+        lastName: '',
+        city: '',
+        street: '',
+        CNP: null,
+        error: "",
+        loading: false,
+        buttonLoading: false,
+        companyName: '',
+        companyCity: '',
+        cuiCode: null,
+        jCode: null,
+        companyAddress: '',
+        arrCountriesValues: [],
+        arrCountriesLabels: [],
+        arrCountiesValues: [],
+        arrCountiesLabels: [],
+        selectedCountryLabel: 'ROMANIA',
+        selectedCountyLabel: 'Iasi'
     };
     constructor(props) {
         super(props)
         this.state = {
-            profileType: 1, country: this.props.profileToModify.country, county: this.props.profileToModify.county, counties: [], countries: [], firstName: '', lastName: '', city: '', street: '', buttonLoading: false, CNP: null, error: "", loading: false,
-            companyName: '', companyCity: '', cuiCode: null, jCode: null, companyAddress: ''
+            profileType: 1,
+            country: this.props.profileToModify.country,
+            county: this.props.profileToModify.county,
+            counties: [],
+            countries: [],
+            firstName: '',
+            lastName: '',
+            city: '',
+            street: '',
+            buttonLoading: false,
+            CNP: null,
+            error: "",
+            loading: false,
+            companyName: '',
+            companyCity: '',
+            cuiCode: null,
+            jCode: null,
+            companyAddress: '',
+            arrCountriesValues: [],
+			arrCountriesLabels: [],
+			 arrCountiesValues: [],
+        arrCountiesLabels: [],
+			selectedCountryLabel: 'ROMANIA',
+			selectedCountyLabel: 'Iasi'
         }
     }
-
+    
     //Display pop-up message to the user
     message(title, content) {
         Alert.alert(
-            title,
-            content,
-            [
-                { text: 'OK', onPress: () => { } },
-            ],
-
-            { cancelable: false }
+        title,
+        content,
+        [
+        { text: 'OK', onPress: () => { } },
+        ],
+        
+        { cancelable: false }
         )
     }
-
+    
     // Start side-menu functions
     toggle() {
         this.setState({
             isOpen: !this.state.isOpen,
         });
     }
-
+    
     updateMenuState(isOpen) {
         this.setState({ isOpen, });
     }
-
+    
     onMenuItemSelected = (item) => {
         this.setState({
             isOpen: false,
@@ -63,73 +109,73 @@ class EditProfile extends Component {
         });
     }
     // !!!End side-menu functions!!!
-
-
+    
+    
     componentDidMount() {
         this.getCountries();
         this.getCounties();
         this.initialiseWithExistingData();
         console.log('tst');
     }
-
+    
     renderButton() {
-        console.log('rendering button')
+       // console.log('rendering button')
         if (this.state.buttonLoading) {
-        console.log('inside rendering button')
+            console.log('inside rendering button')
             return <Spinner size='small' />;
         }
-        console.log(this.state.butttonLoading)
-
+        //console.log(this.state.butttonLoading)
+        
         return (
-            //	<Button onPress = {this.onButtonPress.bind(this)}> 
-            <Button onPress={this.submitChangesButton.bind(this)}>
-                Salvează Modificările
+        //	<Button onPress = {this.onButtonPress.bind(this)}> 
+        <Button onPress={this.submitChangesButton.bind(this)}>
+        Salvează Modificările
 		</Button>
         );
-
+        
     }
-
+    
     redirectToCart() {
         Actions.shop({ responseData: this.props.responseData, componentToDisplay: 'cart' })
-
+        
     }
     getProfileID() {
         console.log("this.props.responseData")
         var self = this;
         console.log(this.props.responseData)
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'profile',
-                device: 'android',
-                token: this.props.responseData.user.token
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
-            }).then(function (response) {
-                if (response.data.success) {
-
-                    self.setState({ profileID: response.data.profiles[0]['id'] });
-
-
-                }
-                if (response.data.success === 0) {
-                    console.log("unsuccess while getting profile id");
-                    console.log(response.data);
-                }
-            });
+        querystring.stringify({
+            tag: 'profile',
+            device: 'android',
+            token: this.props.responseData.user.token
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                
+                self.setState({ profileID: response.data.profiles[0]['id'] });
+                
+                
+            }
+            if (response.data.success === 0) {
+                console.log("unsuccess while getting profile id");
+                console.log(response.data);
+            }
+        });
     }
-
-
-
-
+    
+    
+    
+    
     submitChangesButton() {
         this.setState({ buttonLoading: true });
         if (this.props.profileToModify.type == 1) {
-
+            
             console.log("fizic")
             console.log(this.props.profileToModify)
-
+            
             this.editPhysProfile();
         }
         else {
@@ -137,11 +183,11 @@ class EditProfile extends Component {
             console.log(this.props.profileToModify)
             this.editJurProfile();
         }
-
-
+        
+        
     }
     editPhysProfile() {
-
+        
         // @type = 1
         // @firstname
         // @lastname
@@ -150,58 +196,58 @@ class EditProfile extends Component {
         // @county(din api-ul de Counties)
         // @country(din api-ul de Countries)
         // @cnp
-
+        
         // Daca userul este de tip persoana fizica:
         console.log("-createProfile--")
         var self = this;
         console.log(self.state.firstName + self.state.lastName + self.state.street + self.state.city + 'sss' + self.state.country + self.state.county + 'ss' + self.state.CNP);
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'profile_modify',
-                device: 'android',
-                token: self.props.responseData.user.token,
-                type: 1,
-                firstName: self.state.firstName,
-                lastName: self.state.lastName,
-                address: self.state.street,
-                city: self.state.city,
-                country: self.state.country,
-                county: self.state.county,
-                personalCode: self.state.CNP,
-                pid: self.state.userID
-
-
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+        querystring.stringify({
+            tag: 'profile_modify',
+            device: 'android',
+            token: self.props.responseData.user.token,
+            type: 1,
+            firstName: self.state.firstName,
+            lastName: self.state.lastName,
+            address: self.state.street,
+            city: self.state.city,
+            country: self.state.country,
+            county: self.state.county,
+            personalCode: self.state.CNP,
+            pid: self.state.userID
+            
+            
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            self.setState({ buttonLoading: false });
+            
+            if (response.data.success) {
+                
+                console.log(response.data);
+                Actions.profiles({ responseData: self.props.responseData, headerTitle: 'Profilele mele' });
+                
+                
+            }
+            if (response.data.success === 0) {
+                if (response.data.error_msg != undefined && response.data.error_msg != '') {
+                    self.message('Eroare', response.data.error_msg);
                 }
-            }).then(function (response) {
-                self.setState({ buttonLoading: false });
-
-                if (response.data.success) {
-
-                    console.log(response.data);
-                    Actions.profiles({ responseData: self.props.responseData, headerTitle: 'Profilele mele' });
-
-
+                else {
+                    selfmessage('Eroare', 'Vă rugăm să verificați corectitudinea datelor introduse');
                 }
-                if (response.data.success === 0) {
-                    if (response.data.error_msg != undefined && response.data.error_msg != '') {
-                        self.message('Eroare', response.data.error_msg);
-                    }
-                    else {
-                        selfmessage('Eroare', 'Vă rugăm să verificați corectitudinea datelor introduse');
-                    }
-                    console.log(response.data);
-
-                }
-
-            });
-
-
+                console.log(response.data);
+                
+            }
+            
+        });
+        
+        
     }
     editJurProfile() {
-
+        
         // @type = 0
         // @company
         // @address
@@ -213,152 +259,199 @@ class EditProfile extends Component {
         //         @tag = ‘profile_new’
         // @device (‘android’ sau ‘ios’)
         // @token (Tokenul returnat prin metoda de login)
-
-
+        
+        
         // Daca userul este de tip persoana juridica:
         console.log("-createProfile--")
         var self = this;
         console.log(self.state.companyName + self.state.address + self.state.companyCity + self.state.jCode + 'sss' + self.state.country + self.state.county + 'ss' + self.state.cuiCode + 'id' + self.state.userID);
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'profile_modify',
-                device: 'android',
-                token: self.props.responseData.user.token,
-                type: 0,
-                companyName: self.state.companyName,
-                address: self.state.companyAddress,
-                city: self.state.companyCity,
-                county: self.state.county,
-                country: self.state.country,
-                fiscalCode: self.state.cuiCode,
-                regCom: self.state.jCode,
-                pid: self.state.userID
-
-
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+        querystring.stringify({
+            tag: 'profile_modify',
+            device: 'android',
+            token: self.props.responseData.user.token,
+            type: 0,
+            companyName: self.state.companyName,
+            address: self.state.companyAddress,
+            city: self.state.companyCity,
+            county: self.state.county,
+            country: self.state.country,
+            fiscalCode: self.state.cuiCode,
+            regCom: self.state.jCode,
+            pid: self.state.userID
+            
+            
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            self.setState({ buttonLoading: false });
+            
+            if (response.data.success) {
+                
+                console.log(response.data);
+                Actions.profiles({ responseData: self.props.responseData, headerTitle: 'Profilele mele' });
+                
+                
+            }
+            if (response.data.success === 0) {
+                if (response.data.error_msg != undefined && response.data.error_msg != '') {
+                    self.message('Eroare', response.data.error_msg);
                 }
-            }).then(function (response) {
-                self.setState({ buttonLoading: false });
-
-                if (response.data.success) {
-
-                    console.log(response.data);
-                    Actions.profiles({ responseData: self.props.responseData, headerTitle: 'Profilele mele' });
-
-
+                else {
+                    selfmessage('Eroare', 'Vă rugăm să verificați corectitudinea datelor introduse');
                 }
-                if (response.data.success === 0) {
-                    if (response.data.error_msg != undefined && response.data.error_msg != '') {
-                        self.message('Eroare', response.data.error_msg);
-                    }
-                    else {
-                        selfmessage('Eroare', 'Vă rugăm să verificați corectitudinea datelor introduse');
-                    }
-                    console.log(response.data);
-
-                }
-
-            });
-
-
+                console.log(response.data);
+                
+            }
+            
+        });
+        
+        
     }
     getCountries() {
         var self = this;
-         self.setState({loading: true });
-        axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'countries',
-                device: 'android'
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
+        querystring.stringify({
+            tag: 'countries',
+            device: 'android'
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                var arrCountriesLabels = [];
+                var arrCountriesValues = [];
+                response.data.countries.forEach(function (countrieInfo) {
+                    arrCountriesLabels.push(countrieInfo['name']);
+                    arrCountriesValues.push(countrieInfo['id']);
+                }, this);
+                self.setState({ arrCountriesLabels: arrCountriesLabels });
+                self.setState({ arrCountriesValues: arrCountriesValues });
+                if (self.props.profileToModify != undefined && self.props.profileToModify != '' && self.props.profileToModify.country != undefined && self.props.profileToModify.country != '') {
+                    self.setState({ selectedCountryLabel: arrCountriesLabels[arrCountriesValues.indexOf(self.props.profileToModify.country)] })
+                    console.log(self.props.profileToModify.country)
+                    console.log(self.state.selectedCountryLabel)
                 }
-            }).then(function (response) {
-                if (response.data.success) {
-                    var arrCountries = [];
-                    response.data.countries.forEach(function (countryInfo) {
-                        arrCountries.push([countryInfo['name'], countryInfo['id']]);
-                    }, this);
-                    self.state.countries = arrCountries;
-                    self.setState({ error: '', loading: false, buttonLoading:false });
-                }
-                if (response.data.success === 0) {
-                    console.log("unsuccess from getCountries");
-                }
-            });
-
+                self.setState({ error: '', loading: false });
+            }
+            if (response.data.success === 0) {
+                console.log("unsuccess from getCountries");
+            }
+        });
+        
     }
     getCounties() {
         var self = this;
-         self.setState({loading: true });
+        self.setState({ loading: true });
         
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
-            querystring.stringify({
-                tag: 'counties',
-                device: 'android'
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+        querystring.stringify({
+            tag: 'counties',
+            device: 'android'
+        }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).then(function (response) {
+            if (response.data.success) {
+                var arrCountiesLabels = [];
+				var arrCountiesValues = [];
+                response.data.counties.forEach(function (countieInfo) {
+                    arrCountiesLabels.push(countieInfo['name']);
+					arrCountiesValues.push(countieInfo['id']);
+                }, this);
+                 if (self.props.profileToModify != undefined && self.props.profileToModify != '' && self.props.profileToModify.county != undefined && self.props.profileToModify.county != '') {
+                    self.setState({ selectedCountyLabel: arrCountiesLabels[arrCountiesValues.indexOf(self.props.profileToModify.county)] })
+                    console.log(self.props.profileToModify.county)
+                    console.log(self.state.selectedCountyLabel)
+                    console.log(self.state.selectedCountyLabel)
+                    
                 }
-            }).then(function (response) {
-                if (response.data.success) {
-                    var arrCounties = [];
-                    response.data.counties.forEach(function (countryInfo) {
-                        arrCounties.push([countryInfo['name'], countryInfo['id']]);
-                    }, this);
-                    self.state.counties = arrCounties;
-                    self.setState({ error: '', loading: false, buttonLoading:false});
-                    console.log(response.data);
-                }
-                if (response.data.success === 0) {
-                    console.log("unsuccess from getCounties");
-                }
-            });
-
+                self.setState({ arrCountiesLabels: arrCountiesLabels });
+				self.setState({ arrCountiesValues: arrCountiesValues });
+                self.setState({ error: '', loading: false, buttonLoading: false });
+               
+            }
+            if (response.data.success === 0) {
+                console.log("unsuccess from getCounties");
+            }
+        });
+        
     }
-
-
+    
+    
     renderCountries() {
         if (this.state.loading || this.state.loading == undefined) {
             return (
-                <Spinner size='small' />);
+            <Spinner size='small' />);
         }
         return (
-            <View style={styles.pickerContainerStyle}>
-                <Picker
-                    style={styles.pickerStyle}
-                    selectedValue={this.state.country}
-                    onValueChange={(loc) => this.setState({ country: loc })}>
-                    {
-                        this.state.countries.map(function (o, i) {
-                            return <Picker.Item value={o[1]} label={o[0]} key={i} />
-                        })
-                    }</Picker>
-            </View>
+        <View style={styles.pickerContainerStyle}>
+        
+        
+        <Text
+        style={styles.textStyle}
+        onPress={() => {
+            this.refs.countries.show();
+        }}
+        >
+        {this.state.selectedCountryLabel}
+        </Text>
+        
+        <SimplePicker
+        ref={'countries'}
+        options={this.state.arrCountriesValues}
+        labels={this.state.arrCountriesLabels}
+        onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel: this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
+        itemStyle={{
+            fontSize: 25,
+            color: 'black',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }}
+        />
+        </View>
         );
     }
     renderCounties() {
-        if (this.state.loading || this.state.loading == undefined) {
+        if (this.state.loading || this.state.loading == undefined) 
+        {
             return <Spinner size='small' />;
         }
         return (
-            <View style={styles.pickerContainerStyle}>
-
-                <Picker
-                    style={styles.pickerStyle}
-                    selectedValue={this.state.county}
-                    onValueChange={(loc) => this.setState({ county: loc })}>
-                    {this.state.counties.map(function (o, i) {
-
-                        return <Picker.Item value={o[1]} label={o[0]} key={i} />
-                    })}</Picker>
-            </View>
+        <View style={styles.pickerContainerStyle}>
+        
+        
+        <Text
+        style={styles.textStyle}
+        onPress={() => {
+            this.refs.counties.show();
+        }}
+        >
+        {this.state.selectedCountyLabel}
+        </Text>
+        
+        <SimplePicker
+        ref={'counties'}
+        options={this.state.arrCountiesValues}
+        labels={this.state.arrCountiesLabels}
+        onSubmit={(loc) => this.setState({ county: loc, selectedCountyLabel: this.state.arrCountiesLabels[this.state.arrCountiesValues.indexOf(loc)] })}
+        itemStyle={{
+            fontSize: 25,
+            color: 'black',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }}
+        />
+        </View>
         );
     }
     initialiseWithExistingData() {
         if (this.props.profileToModify.type == 0) {
+            console.log(this.props.profileToModify);
             this.setState({
                 companyName: this.props.profileToModify.companyName,
                 companyAddress: this.props.profileToModify.address,
@@ -369,6 +462,9 @@ class EditProfile extends Component {
             });
         }
         else {
+            
+            console.log(this.props.profileToModify);
+            
             this.setState({
                 firstName: this.props.profileToModify.firstName,
                 street: this.props.profileToModify.address,
@@ -382,155 +478,155 @@ class EditProfile extends Component {
     showForm() {
         if (this.props.profileToModify.type == 0) {
             return (
-                <View>
-                    <CardSection >
-                        <Input
-                            label="Denumire"
-                            value={this.state.companyName}
-                            onChangeText={companyName => this.setState({ companyName })}
-                        />
-                    </CardSection>
-
-                    <CardSection>
-                        <Text style={styles.textStyle} > Țara </Text>
-                        {this.renderCountries()}
-
-                    </CardSection>
-                    <CardSection>
-                        <Text style={styles.textStyle} > Județ </Text>
-                        {this.renderCounties()}
-
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="Oraș"
-                            value={this.state.companyCity}
-                            onChangeText={companyCity => this.setState({ companyCity })}
-                        />
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="Adresă"
-                            value={this.state.companyAddress}
-                            onChangeText={companyAddress => this.setState({ companyAddress })}
-                        />
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="CUI"
-                            value={this.state.cuiCode}
-                            onChangeText={cuiCode => this.setState({ cuiCode })}
-                        />
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="R. Comert"
-                            value={this.state.jCode}
-                            onChangeText={jCode => this.setState({ jCode })}
-                        />
-                    </CardSection>
-
-                    {this.renderButton()}
-                </View>
-
+            <View>
+            <CardSection >
+            <Input
+            label="Denumire"
+            value={this.state.companyName}
+            onChangeText={companyName => this.setState({ companyName })}
+            />
+            </CardSection>
+            
+            <CardSection>
+            <Text style={styles.textStyle} > Țara </Text>
+            {this.renderCountries()}
+            
+            </CardSection>
+            <CardSection>
+            <Text style={styles.textStyle} > Județ </Text>
+            {this.renderCounties()}
+            
+            </CardSection>
+            <CardSection >
+            <Input
+            label="Oraș"
+            value={this.state.companyCity}
+            onChangeText={companyCity => this.setState({ companyCity })}
+            />
+            </CardSection>
+            <CardSection >
+            <Input
+            label="Adresă"
+            value={this.state.companyAddress}
+            onChangeText={companyAddress => this.setState({ companyAddress })}
+            />
+            </CardSection>
+            <CardSection >
+            <Input
+            label="CUI"
+            value={this.state.cuiCode}
+            onChangeText={cuiCode => this.setState({ cuiCode })}
+            />
+            </CardSection>
+            <CardSection >
+            <Input
+            label="R. Comert"
+            value={this.state.jCode}
+            onChangeText={jCode => this.setState({ jCode })}
+            />
+            </CardSection>
+            
+            {this.renderButton()}
+            </View>
+            
             );
         }
-
-
-
+        
+        
+        
         else {
             return (
-                <View>
-                    <CardSection >
-                        <Input
-                            label="Prenume"
-                            value={this.state.firstName}
-                            onChangeText={firstName => this.setState({ firstName })}
-                        />
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="Nume"
-                            value={this.state.lastName}
-                            onChangeText={lastName => this.setState({ lastName })}
-                        />
-                    </CardSection>
-
-                    <CardSection>
-                        <Text style={styles.textStyle} > Țara </Text>
-                        {this.renderCountries()}
-
-                    </CardSection>
-                    <CardSection>
-                        <Text style={styles.textStyle} > Județ </Text>
-                        {this.renderCounties()}
-
-
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="Oraș"
-                            value={this.state.city}
-                            onChangeText={city => this.setState({ city })}
-                        />
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="Adresă"
-                            value={this.state.street}
-                            onChangeText={street => this.setState({ street })}
-                        />
-                    </CardSection>
-                    <CardSection >
-                        <Input
-                            label="CNP"
-                            value={String(this.state.CNP)}
-                            onChangeText={CNP => this.setState({ CNP })}
-                        />
-                    </CardSection>
-
-
-                    {this.renderButton()}
-                </View>
+            <View>
+            <CardSection >
+            <Input
+            label="Prenume"
+            value={this.state.firstName}
+            onChangeText={firstName => this.setState({ firstName })}
+            />
+            </CardSection>
+            <CardSection >
+            <Input
+            label="Nume"
+            value={this.state.lastName}
+            onChangeText={lastName => this.setState({ lastName })}
+            />
+            </CardSection>
+            
+            <CardSection>
+            <Text style={styles.textStyle} > Țara </Text>
+            {this.renderCountries()}
+            
+            </CardSection>
+            <CardSection>
+            <Text style={styles.textStyle} > Județ </Text>
+            {this.renderCounties()}
+            
+            
+            </CardSection>
+            <CardSection >
+            <Input
+            label="Oraș"
+            value={this.state.city}
+            onChangeText={city => this.setState({ city })}
+            />
+            </CardSection>
+            <CardSection >
+            <Input
+            label="Adresă"
+            value={this.state.street}
+            onChangeText={street => this.setState({ street })}
+            />
+            </CardSection>
+            <CardSection >
+            <Input
+            label="CNP"
+            value={String(this.state.CNP)}
+            onChangeText={CNP => this.setState({ CNP })}
+            />
+            </CardSection>
+            
+            
+            {this.renderButton()}
+            </View>
             );
         }
     }
-
-
+    
+    
     render() {
         //menu
         const menu = <Menu onItemSelected={this.onMenuItemSelected} currentItem={this.state.selectedItem} responseData={this.props.responseData} />;
         //!!menu!!
-
+        
         return (
-            // Side menu start
-            <SideMenu
-                menu={menu}
-                isOpen={this.state.isOpen}
-                onChange={(isOpen) => this.updateMenuState(isOpen)}>
-                <View style={{
-                    flex: 1,
-                    backgroundColor: '#FFFFFF',
-                }}>
-                    {/*Content start */}
-                    <Header headerText={this.props.headerTitle} />
-                    <ScrollView >
+        // Side menu start
+        <SideMenu
+        menu={menu}
+        isOpen={this.state.isOpen}
+        onChange={(isOpen) => this.updateMenuState(isOpen)}>
+        <View style={{
+            flex: 1,
+            backgroundColor: '#FFFFFF',
+        }}>
+    {/*Content start */}
+    <Header headerText={this.props.headerTitle} />
+    <ScrollView >
+    
+    <Card >
+    
+    {this.showForm()}
+    </Card>
+    </ScrollView >
+    
+{/*!!!Content end!!! */}
+</View>
+<MenuButton onPress={() => this.toggle()} />
 
-                        <Card >
+</SideMenu>
+// !!!Side menu end!!!
 
-                            {this.showForm()}
-                        </Card>
-                    </ScrollView >
-
-                    {/*!!!Content end!!! */}
-                </View>
-                <MenuButton onPress={() => this.toggle()} />
-
-            </SideMenu>
-            // !!!Side menu end!!!
-
-        )
-    }
+)
+}
 };
 const inCartRovignetteKey = '@inCartRovignetteKey:key';
 const styles = {
@@ -546,16 +642,16 @@ const styles = {
     pickerStyle: {
         color: 'black',
         marginLeft: -7,
-
-
-
+        
+        
+        
     },
     pickerContainerStyle: {
         borderBottomColor: '#808080',
         borderBottomWidth: 1,
         marginLeft: 5,
-
-
+        
+        
         flex: 2
     },
     buttonStyle: {
@@ -588,8 +684,8 @@ const styles = {
         marginBottom: 15,
         marginLeft: 15,
         color: 'black',
-
-
+        
+        
     },
     errorTextStyle: {
         flex: 1,

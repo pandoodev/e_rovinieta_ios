@@ -227,146 +227,9 @@ class MyCars extends Component {
 			<View style={styles.pageContainerStyle}>
 				<Text style={styles.pageTitleStyle}> Alege categoria mașinii </Text>
 
-				
-
 
 					{this.renderCategories()}					
 
-
-
-					{/*<View style={styles.containerStyle}>
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'A',
-									categoryID: "1"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/a.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle} > Categoria A </Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'E',
-									categoryID: "5"
-								})
-							}}
-
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/e.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle}>Categoria E  </Text>
-						</TouchableOpacity>
-
-					</View>
-
-					<View style={styles.containerStyle}>
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'B',
-									categoryID: "2"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/b.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle} > Categoria B </Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'F',
-									categoryID: "6"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/f.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle}> Categoria F </Text>
-						</TouchableOpacity>
-
-
-					</View>
-					<View style={styles.containerStyle}>
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'C',
-									categoryID: "3"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/c.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle} > Categoria C </Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'G',
-									categoryID: "7"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/g.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle}> Categoria G </Text>
-						</TouchableOpacity>
-
-
-					</View>
-					<View style={styles.containerStyle}>
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'D',
-									categoryID: "4"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/d.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle} > Categoria D </Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => {
-								Actions.buy({
-									responseData: this.props.responseData, category: 'H',
-									categoryID: "8"
-								})
-							}}
-							style={styles.buttonStyle}>
-							<View>
-								<Image
-									source={require('../../../../../assets/h.png')} style={styles.imgStyle} />
-							</View>
-							<Text style={styles.textStyle}> Categoria H </Text>
-						</TouchableOpacity>
-
-
-					</View>*/}
 
 			</View>
 
@@ -415,12 +278,12 @@ const styles = {
 
 	},
 	pageTitleStyle: {
-		fontSize: 24,
+		fontSize: 19,
 		textAlign: 'center',
 		color: '#000000',
 		fontWeight: '600',
-		paddingBottom: 10,
-		marginTop: -15
+		paddingBottom: 3,
+		marginTop: -30
 	}
 };
 

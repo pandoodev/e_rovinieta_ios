@@ -196,7 +196,7 @@ class RovignetteShopMain extends Component {
 										{this.imageType('history')}
 
 									</View>
-									<Text style={styles.textStyle}>Comenzile mele  {'\n'}</Text>
+									<Text style={styles.textStyle}>Comenzi {'\n'}</Text>
 
 								</TouchableOpacity>
 

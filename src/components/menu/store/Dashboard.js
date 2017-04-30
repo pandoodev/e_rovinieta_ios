@@ -102,16 +102,16 @@ const styles = {
     flex: 0.5,
   }, 
    asideText: {
-    fontSize: 30,
+    fontSize: 27,
    textAlign: 'center',
     color: '#000000',
     fontWeight: '600',
-    paddingTop: 5,
-    paddingBottom: 10
+    marginTop: 5,
+    paddingBottom: 5
     
   },
   smallText: {
-    fontSize: 24,
+    fontSize: 22,
    textAlign: 'center',
     color: '#000000',
     fontWeight: '600',
@@ -120,7 +120,7 @@ const styles = {
     
   },
   welcomeText: {
-    fontSize: 35,
+    fontSize: 32,
   
     alignSelf: 'center',
     color: '#FFFFFF',

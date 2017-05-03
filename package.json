@@ -1,12 +1,12 @@
 {
-  "name": "erovinieta_ios",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
-  },
-  "dependencies": {
+	"name": "e_rovinieta_ios",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest"
+	},
+	"dependencies": {
     "axios": "^0.16.1",
     "query-string": "^4.3.4",
     "react": "^15.4.2",
@@ -24,7 +24,7 @@
     "jest": "19.0.2",
     "react-test-renderer": "16.0.0-alpha.6"
   },
-  "jest": {
-    "preset": "react-native"
-  }
+	"jest": {
+		"preset": "react-native"
+	}
 }

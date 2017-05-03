@@ -3,4 +3,4 @@ const { AppRegistry, } = React;
 import App from './src/App';
 
 
-AppRegistry.registerComponent('erovinieta_ios', () => App);
+AppRegistry.registerComponent('e_rovinieta_ios', () => App);

@@ -188,6 +188,7 @@ const window = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   menu: {
+    paddingTop:19,
     flex: 1,
     width: null,
     height: null,

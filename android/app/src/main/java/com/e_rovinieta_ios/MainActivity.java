@@ -1,4 +1,4 @@
-package com.erovinieta_ios;
+package com.e_rovinieta_ios;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "erovinieta_ios";
+        return "e_rovinieta_ios";
     }
 }

@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-export default class erovinieta_ios extends Component {
+export default class e_rovinieta_ios extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('erovinieta_ios', () => erovinieta_ios);
+AppRegistry.registerComponent('e_rovinieta_ios', () => e_rovinieta_ios);

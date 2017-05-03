@@ -18,12 +18,12 @@ module.exports = class Menu extends Component {
     }
   };
 
-  state = {  itemsInCart: {}, loading:false };
+  state = { itemsInCart: {}, loading: false };
   //Getting data from AsyncStorage into state variable
-  	componentWillMount() {
-		inCartRovignetteKey = this.props.responseData.user.token;
+  componentWillMount() {
+    inCartRovignetteKey = this.props.responseData.user.token;
     this.addCartItemsToState();
-    }
+  }
 
   addCartItemsToState() {
     console.log(inCartRovignetteKey);
@@ -52,7 +52,7 @@ module.exports = class Menu extends Component {
 
   }
   itemsInCart() {
-    if(this.props.rovignettesInCart!=undefined){
+    if (this.props.rovignettesInCart != undefined) {
       return this.props.rovignettesInCart
     }
     if (this.state.itemsInCart.length > 0) {
@@ -93,11 +93,24 @@ module.exports = class Menu extends Component {
                 onPress={() => { this.props.onItemSelected('dashboard'); Actions.shop({ responseData: this.props.responseData, location: 'rovignette' }) }}
                 style={styles.item}>
                 Roviniete {this.itemsInCart()}
-                    </Text>
+              </Text>
             </View>
 
           </View>
 
+          <View style={styles.rowItem}>
+            <Image
+              style={styles.smallIcon}
+              source={require('../../../assets/menu/fetesti.png')} />
+            <View>
+              <Text
+                onPress={() => { this.props.onItemSelected('bridge_shop'); Actions.bridge_shop({ responseData: this.props.responseData, location: 'pod_fetesti' }) }}
+                style={styles.item}>
+                Fetesti {this.itemsInCart()}
+              </Text>
+            </View>
+
+          </View>
           <View style={styles.rowItem}>
             <Image
               style={styles.smallIcon}
@@ -137,6 +150,20 @@ module.exports = class Menu extends Component {
                   </Text>
             </View>
           </View>
+
+          <View style={styles.rowItem}>
+            <Image
+              style={styles.smallIcon}
+              source={require('../../../assets/menu/contact.png')} />
+            <View>
+              <Text
+                onPress={() => { this.props.onItemSelected('accountsettings'); Actions.contact_us({ responseData: this.props.responseData }) }}
+                style={styles.item}>
+                Contact
+                  </Text>
+            </View>
+
+          </View>
           <View style={styles.rowItem}>
             <Image
               style={styles.smallIcon}
@@ -169,7 +196,6 @@ const styles = StyleSheet.create({
   avatarContainer: {
     width: null,
     height: 60,
-    marginTop:19,
     backgroundColor: '#222222',
     alignItems: 'center'
 

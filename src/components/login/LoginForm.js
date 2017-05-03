@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Navigaor, Image, Alert, AppState, AsyncStorage, TextInput, Linking } from 'react-native';
+import { View, Text, Navigaor, Image, Alert, AppState, AsyncStorage, TextInput, Linking, AlertIOS,  PushNotificationIOS} from 'react-native';
 import { LoginButton, Card, CardSection, Input, Spinner } from '../common';
 import axios from 'axios';
 import querystring from 'query-string';
@@ -7,9 +7,24 @@ import md5 from "react-native-md5";
 import { Actions } from 'react-native-router-flux';
 import Header from '../common/Header';
 
+import PushController from "./PushController";
+var PushNotification = require('react-native-push-notification');
+
+
 class LoginForm extends Component {
 
 	state = { username: '', password: '', error: '', loading: false, loggedIn: false, appState: null };
+
+	_sendLocalNotification() {
+    require('RCTDeviceEventEmitter').emit('localNotificationReceived', {
+      aps: {
+        alert: 'Sample local notification',
+        badge: '+1',
+        sound: 'default',
+        category: 'REACT_NATIVE'
+      },
+    });
+  }
 
 	// START Storage Methods
 	_removeStorage = async (STORAGE_KEY_ARG) => {
@@ -45,11 +60,65 @@ class LoginForm extends Component {
 		}
 	}
 
-
+	_onLocalNotification(notification){
+	    AlertIOS.alert(
+	      'Local Notification Received',
+	      'Alert message: ' + notification.getMessage(),
+	      [{
+	        text: 'Dismiss',
+	        onPress: null,
+	      }]
+	    );
+	  }
 	componentWillMount() {
 		this.checkIfUserIsLoged();
+		PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
+
+
+
+
+        //PushNotificationIOS.addEventListener('register', this._onRegistered);
+	    //PushNotificationIOS.addEventListener('registrationError', this._onRegistrationError);
+	    //PushNotificationIOS.addEventListener('notification', this._onRemoteNotification);
+		PushNotificationIOS.requestPermissions();
 		//this.notification();
+
+
+		//this._sendLocalNotification();
+
+
+
 	}
+	_onRemoteNotification(notification) {
+    AlertIOS.alert(
+      'Push Notification Received',
+      'Alert message: ' + notification.getMessage(),
+      [{
+        text: 'Dismiss',
+        onPress: null,
+      }]
+    );
+  }
+	_onRegistrationError(error) {
+    AlertIOS.alert(
+      'Failed To Register For Remote Push',
+      `Error (${error.code}): ${error.message}`,
+      [{
+        text: 'Dismiss',
+        onPress: null,
+      }]
+    );
+  }
+	_onRegistered(deviceToken) {
+	    AlertIOS.alert(
+	      'Registered For Remote Push',
+	      `Device Token: ${deviceToken}`,
+	      [{
+	        text: 'Dismiss',
+	        onPress: null,
+	      }]
+	    );
+	  }
 	constructor(props) {
 		super(props);
 		//this.handleAppStateChange = this.handleAppStateChange.bind(this);
@@ -101,7 +170,7 @@ class LoginForm extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'login',
-				device: 'ios',
+				device: 'android',
 				password: hashedPass,
 				username: username
 			}), {
@@ -156,67 +225,36 @@ class LoginForm extends Component {
 			error: ''
 		});
 
-		// console.log("Push-notification setup started!");
-		// PushNotification.configure({
-		// 	onNotification:
+		console.log("Push-notification setup started!");
+		PushNotification.configure({
+			onNotification: function (notification) {
 
-		// 	function (notification) {
+				console.log("ceva");
+			},
+			senderID: "145264640175",
+			// IOS ONLY (optional): default: all - Permissions to register.
+			permissions: {
+				alert: true,
+				badge: true,
+				sound: true
+			},
 
-		// 		var loginData = AsyncStorage.getItem(STORAGE_KEY);
-		// 		if (loginData !== null) {
-		// 			loginData.then(function (value) {
-		// 				if (value != null || value != undefined) {
-		// 					var loginDataFromStorage = JSON.parse(value);
+			onRegister: function(token) {
+				console.log( 'TOKEN:', token );
+			},
 
+			// Should the initial notification be popped automatically
+			// default: true
+			popInitialNotification: true,
 
-		// 					PushNotification.localNotificationSchedule({
-		// 						message: notification['gcm.notification.body'],
-		// 						date: new Date(Date.now())
-		// 					});
-		// 				}
-		// 			});
-		// 		}
-		// 	},
-		// 	// ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-		// 	senderID: "145264640175",
+			/**
+			 * (optional) default: true
+			 * - Specified if permissions (ios) and token (android and ios) will requested or not,
+			 * - if not, you must call PushNotificationsHandler.requestPermissions() later
+			 */
+			requestPermissions: true,
 
-		// 	// IOS ONLY (optional): default: all - Permissions to register.
-		// 	permissions: {
-		// 		alert: true,
-		// 		badge: true,
-		// 		sound: true
-		// 	},
-
-		// 	onRegister: function(token) {
-		// 		console.log( 'TOKEN:', token );
-
-		// 		//TODO: replace the post url to the provided api
-		// 		// axios.post('http://coiot.xyz/test.php',
-		// 		// 	querystring.stringify({
-		// 		// 		token_firebase: token.token,
-		// 		// 	}), {
-		// 		// 		headers: {
-		// 		// 			"Content-Type": "application/x-www-form-urlencoded"
-		// 		// 		}
-		// 		// 	}).then(function (response) {
-		// 		// 		console.log("response");
-		// 		// 		console.log(response);
-		// 		// 		console.log("response");
-		// 		// 	});
-		// 	},
-
-		// 	// Should the initial notification be popped automatically
-		// 	// default: true
-		// 	popInitialNotification: true,
-
-		// 	/**
-		// 	 * (optional) default: true
-		// 	 * - Specified if permissions (ios) and token (android and ios) will requested or not,
-		// 	 * - if not, you must call PushNotificationsHandler.requestPermissions() later
-		// 	 */
-		// 	requestPermissions: true,
-
-		// });
+		});
 
 		Actions.main({ responseData: response.data });
 

@@ -1,12 +1,12 @@
 {
-	"name": "e_rovinieta_ios",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
-	},
-	"dependencies": {
+  "name": "e_rovinieta_ios",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
     "axios": "^0.16.1",
     "query-string": "^4.3.4",
     "react": "^15.4.2",
@@ -14,6 +14,7 @@
     "react-native-datepicker": "^1.4.7",
     "react-native-md5": "^1.0.0",
     "react-native-prefix-picker": "^2.0.2",
+    "react-native-push-notification": "^2.2.1",
     "react-native-router-flux": "3.38.0",
     "react-native-side-menu": "^0.20.1",
     "react-native-simple-picker": "^1.2.1"
@@ -24,7 +25,7 @@
     "jest": "19.0.2",
     "react-test-renderer": "16.0.0-alpha.6"
   },
-	"jest": {
-		"preset": "react-native"
-	}
+  "jest": {
+    "preset": "react-native"
+  }
 }

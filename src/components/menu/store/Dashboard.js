@@ -10,7 +10,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Linking,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
@@ -20,9 +21,9 @@ class Dashboard extends Component {
     selectedItem: 'Dashboard',
   };
 
-componentWillMount(){
+  componentWillMount() {
 
-	}
+  }
 
   // Start side-menu functions
   toggle() {
@@ -53,37 +54,51 @@ componentWillMount(){
         menu={menu}
         isOpen={this.state.isOpen}
         onChange={(isOpen) => this.updateMenuState(isOpen)}>
-        
+
         <View style={{
           flex: 1,
           backgroundColor: '#FFFFFF',
         }}>
           {/*Content start */}
-          
+
           <Header headerText={'Prima pagină'} />
-          
+
           <View style={styles.containerRov}>
-                <Text style={styles.asideText}> Cumpără roviniete online!  </Text>
-                <Text style={styles.smallText}> Plătești cu cardul și primești instant prin SMS și e-mail </Text>
-                
+            <Text style={styles.asideText}> Cumpără roviniete online!  </Text>
+            <Text style={styles.smallText}> Plătești cu cardul și primești instant prin SMS și e-mail </Text>
 
-              <TouchableOpacity
-                onPress={() => { Actions.shop({ responseData: this.props.responseData, location: 'rovignette' }); }}
-                style={styles.buttonStyle}>
-               
-                <Text style={styles.welcomeText}> Cumpără rovinietă</Text>
 
-              </TouchableOpacity>
-                <Text style={styles.smallText}> Serviciu oferit UNTRR - distribuitor autorizat de CNAIR pentru emitere de roviniete electronice</Text>
-              
-                </View>
-            <View style={{ flex:0.2, paddingBottom:20, marginLeft:-15}}>
-              <Image source={require('../../../../assets/untr.jpg')} style={styles.imgStyle} />
+            <TouchableOpacity
+              onPress={() => { Actions.shop({ responseData: this.props.responseData, location: 'rovignette' }); }}
+              style={styles.buttonStyle}>
+
+              <Text style={styles.welcomeText}> Cumpără rovinietă</Text>
+
+            </TouchableOpacity>
+            
+
+            <TouchableOpacity
+              onPress={() => { Actions.bridge_shop({ responseData: this.props.responseData, location: 'pod_fetesti' }); }}
+              style={styles.buttonFetestiStyle}>
+
+              <Text style={styles.welcomeText}> Taxă pod Fetești</Text>
+
+            </TouchableOpacity>
+
+            <Text style={styles.smallText}> Serviciu oferit UNTRR - distribuitor autorizat de CNAIR pentru emitere de roviniete electronice</Text>
+            <Text
+              style={styles.linkText}
+              onPress={() => Linking.openURL('https://www.e-rovinieta.ro/ro/contact')}
+            >www.e-rovinieta.ro</Text>
+
           </View>
-        
+          <View style={{ flex: 0.2, paddingBottom: 20, marginLeft: -15 }}>
+            <Image source={require('../../../../assets/untr.jpg')} style={styles.imgStyle} />
+          </View>
+
           {/*!!!Content end!!! */}
         </View>
-         <MenuButton onPress={() => this.toggle()} />
+        <MenuButton onPress={() => this.toggle()} />
       </SideMenu>
       // !!!Side menu end!!!
     );
@@ -93,46 +108,55 @@ const window = Dimensions.get('window');
 
 const styles = {
   containerRov: {
-    backgroundColor:'#FFFFFF',
+    paddingTop: window.height*0.06,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     flex: 1,
   },
   containerBridge: {
     justifyContent: 'center',
     flex: 0.5,
-  }, 
-   asideText: {
-    fontSize: 27,
-   textAlign: 'center',
+  },
+  asideText: {
+    fontSize: 28,
+    textAlign: 'center',
     color: '#000000',
     fontWeight: '600',
-    marginTop: 5,
-    paddingBottom: 5
-    
+
   },
   smallText: {
     fontSize: 22,
-   textAlign: 'center',
+    textAlign: 'center',
     color: '#000000',
     fontWeight: '600',
     paddingTop: 5,
     paddingBottom: 10
-    
+
+  }
+  ,
+  linkText: {
+    fontSize: 20,
+    paddingTop:window.height*0.03,
+    textAlign: 'center',
+    fontWeight: '600',
+
+    color: '#337ab7',
+
   },
   welcomeText: {
-    fontSize: 32,
-  
+    fontSize: 33,
+
     alignSelf: 'center',
     color: '#FFFFFF',
     fontWeight: '600',
     paddingTop: 5,
     paddingBottom: 10
-    
+
   },
   instructions: {
     textAlign: 'center',
     color: '#FFFFFF',
-    fontSize: 30,
+    fontSize: 28,
   },
   backgroundImage: {
     flex: 1,
@@ -147,13 +171,22 @@ const styles = {
     borderRadius: 5,
     marginLeft: 5,
     marginRight: 5
-    
+
   },
-  imgStyle:{
-    flex:1,
-    width:null,
+  buttonFetestiStyle: {
+    alignSelf: 'stretch',
+    backgroundColor: '#ed2124',
+    borderRadius: 5,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop:10
+
+  },
+  imgStyle: {
+    flex: 1,
+    width: null,
     resizeMode: 'contain',
-    height:null,
+    height: null,
   }
 };
 

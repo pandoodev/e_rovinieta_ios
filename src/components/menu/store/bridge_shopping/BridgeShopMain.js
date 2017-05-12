@@ -16,17 +16,17 @@ import MenuButton from '../../../common/MenuButton';
 
 
 
-inCartRovignetteKey = null;
+inCartRovignetteKeyBridge  = null;
 class BridgeShopMain extends Component {
 state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 
 	//Getting data from AsyncStorage into state variable
 	addCartItemsToState() {
-		console.log(inCartRovignetteKey);
+		console.log(inCartRovignetteKeyBridge );
 
 		var self = this;
 		try {
-			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKey);
+			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKeyBridge );
 			if (itemsInCart !== null) {
 				itemsInCart.then(function (value) {
 					if (value != null || value != undefined) {
@@ -74,7 +74,7 @@ state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 		}
 	}
 	componentWillMount() {
-		inCartRovignetteKey = this.props.responseData.user.token;
+		inCartRovignetteKeyBridge  = this.props.responseData.user.token+"bridge";
 		if (this.props.componentToDisplay != undefined) {
 			this.setState({ selected: this.props.componentToDisplay });
 		}
@@ -141,7 +141,7 @@ state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 	render() {
 
 		//menu
-		const menu = <Menu onItemSelected={this.onMenuItemSelected} currentItem={this.state.selectedItem} responseData={this.props.responseData} rovignettesInCart={this.itemsInCartMenuFormated()} />;
+		const menu = <Menu onItemSelected={this.onMenuItemSelected} currentItem={this.state.selectedItem} responseData={this.props.responseData}   bridgePassesInCart={this.itemsInCartMenuFormated()}/>;
 		//!!menu!!
 
 		return (

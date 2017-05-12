@@ -22,6 +22,7 @@ module.exports = class Menu extends Component {
   //Getting data from AsyncStorage into state variable
   componentWillMount() {
     inCartRovignetteKey = this.props.responseData.user.token;
+    inCartRovignetteKeyBridge=this.props.responseData.user.token+"bridge";
     this.addCartItemsToState();
   }
 
@@ -31,6 +32,7 @@ module.exports = class Menu extends Component {
     var self = this;
     try {
       var itemsInCart = AsyncStorage.getItem(inCartRovignetteKey);
+      var bridgeItemsInCart = AsyncStorage.getItem(inCartRovignetteKeyBridge);
       if (itemsInCart !== null) {
         itemsInCart.then(function (value) {
           if (value != null || value != undefined) {
@@ -40,6 +42,20 @@ module.exports = class Menu extends Component {
           }
           else {
             self.setState({ itemsInCart: '' });
+            self.setState({ loading: false });
+          }
+        });
+      }
+
+       if (bridgeItemsInCart !== null) {
+        bridgeItemsInCart.then(function (value) {
+          if (value != null || value != undefined) {
+            var itemsInCartJson = JSON.parse(value);
+            self.setState({ bridgeItemsInCart: itemsInCartJson });
+            self.setState({ loading: false });
+          }
+          else {
+            self.setState({ bridgeItemsInCart: '' });
             self.setState({ loading: false });
           }
         });
@@ -59,7 +75,6 @@ module.exports = class Menu extends Component {
       return ('(' + this.state.itemsInCart.length + ')');
     }
   }
-
    bridgeItemsInCart() {
     if (this.props.bridgePassesInCart != undefined) {
       return this.props.bridgePassesInCart
@@ -68,7 +83,6 @@ module.exports = class Menu extends Component {
       return ('(' + this.state.bridgeItemsInCart.length + ')');
     }
   }
-
   render() {
     return (
       <ScrollView scrollsToTop={false} style={styles.menu}>
@@ -191,8 +205,6 @@ module.exports = class Menu extends Component {
     );
   }
 };
-
-
 
 const window = Dimensions.get('window');
 

@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux';
 import { WebView } from 'react-native';
 
 
-inCartRovignetteKey = null;
+inCartRovignetteKeyBridge  = null;
 
 class BridgeCart extends Component {
 
@@ -64,14 +64,14 @@ class BridgeCart extends Component {
 			redirecting: false
 		};
 
-		inCartRovignetteKey = this.props.responseData.user.token;
+		inCartRovignetteKeyBridge  = this.props.responseData.user.token+"bridge";
 	}
 
 	//Getting data from AsyncStorage into state variable
 	addCartItemsToState() {
 		var self = this;
 		try {
-			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKey);
+			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKeyBridge );
 			if (itemsInCart !== null) {
 				itemsInCart.then(function (value) {
 					if (value != null || value != undefined) {
@@ -113,8 +113,8 @@ class BridgeCart extends Component {
 		var currentItemsInCart = this.state.itemsInCart;
 		currentItemsInCart.splice(elementPosition, 1);
 		this.setState({ itemsInCart: currentItemsInCart });
-		this._removeStorage(inCartRovignetteKey);
-		this._addToStorage(inCartRovignetteKey, JSON.stringify(currentItemsInCart));
+		this._removeStorage(inCartRovignetteKeyBridge );
+		this._addToStorage(inCartRovignetteKeyBridge , JSON.stringify(currentItemsInCart));
 		this.props.deleteFromCart();
 
 
@@ -127,15 +127,15 @@ class BridgeCart extends Component {
 	removeFromCartAfterBuy() {
 		this.setState({ itemsInCart: '' });
 		var currentItemsInCart = '';
-		this._removeStorage(inCartRovignetteKey);
-		this._addToStorage(inCartRovignetteKey, JSON.stringify(currentItemsInCart));
+		this._removeStorage(inCartRovignetteKeyBridge );
+		this._addToStorage(inCartRovignetteKeyBridge , JSON.stringify(currentItemsInCart));
 		this.props.deleteFromCart();
 
 	}
 
 	//Removes stored cart items from AsyncStorage
 	deleteItems() {
-		this._removeStorage(inCartRovignetteKey);
+		this._removeStorage(inCartRovignetteKeyBridge );
 		this.setState({ itemsInCart: "" });
 		this.setState({ loading: false });
 	}

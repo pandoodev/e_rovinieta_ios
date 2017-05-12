@@ -17,7 +17,6 @@ import MenuButton from '../../../common/MenuButton';
 
 
 
-inCartRovignetteKey = null;
 
 class BridgeAddToCart extends Component {
 	state = {
@@ -50,10 +49,11 @@ class BridgeAddToCart extends Component {
 			arrValabilitiesValues: [],
 			arrValabilitiesLabels: [],
 			selectedCountryLabel: 'ROMANIA',
-			selectedValabilityLabel: ''
+			selectedValabilityLabel: '',
+			
 
 		}
-		inCartRovignetteKey = this.props.responseData.user.token;
+		inCartRovignetteKeyBridge = this.props.responseData.user.token+"bridge";
 
 	}
 	getVehicleNo() {
@@ -349,7 +349,7 @@ renderCountries() {
 	}
 
 	redirectToCart() {
-		Actions.shop({ responseData: this.props.responseData, componentToDisplay: 'cart' })
+		Actions.bridge_shop({ responseData: this.props.responseData, componentToDisplay: 'cart' })
 	}
 	getProfileID() {
 		console.log("this.props.responseData")
@@ -476,7 +476,7 @@ renderCountries() {
 			console.log(response.data);
 
 			if (response.data.success) {
-				self.appendIfNotEmpty(inCartRovignetteKey, rovignetteInfo);
+				self.appendIfNotEmpty(inCartRovignetteKeyBridge, rovignetteInfo);
 				return 1;
 			}
 
@@ -531,7 +531,7 @@ renderCountries() {
 	appendIfNotEmpty(STORAGE_KEY_ARG, newItem) {
 		var self = this;
 		try {
-			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKey);
+			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKeyBridge);
 			if (itemsInCart !== null) {
 				itemsInCart.then(function (value) {
 					if (value != null || value != undefined) {

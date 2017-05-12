@@ -85,7 +85,7 @@ class Dashboard extends Component {
 
             </TouchableOpacity>
 
-            <Text style={styles.smallText}> Serviciu oferit UNTRR - distribuitor autorizat de CNAIR pentru emitere de roviniete electronice</Text>
+             <Text style={styles.smallText}> Serviciu oferit de UNTRR - distribuitor autorizat CNAIR pentru emitere de roviniete și peaj electronic</Text>
             <Text
               style={styles.linkText}
               onPress={() => Linking.openURL('https://www.e-rovinieta.ro/ro/contact')}

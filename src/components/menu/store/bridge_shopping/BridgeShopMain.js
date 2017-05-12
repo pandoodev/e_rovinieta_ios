@@ -56,7 +56,7 @@ state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 
 	itemsInCartMenuFormated() {
 		if (this.state.itemsInCart.length > 0) {
-			return ('(' + this.state.itemsInCart.length + ' în coș)');
+			return ('(' + this.state.itemsInCart.length + ')');
 		}
 		else{
 			return '';

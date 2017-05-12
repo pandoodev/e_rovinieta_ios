@@ -8,6 +8,8 @@ import Header from '../../common/Header';
 
 import { Spinner } from '../../common';
 
+import Autolink from 'react-native-autolink';
+
 //!menu!!
 
 class Contact extends Component {
@@ -63,7 +65,7 @@ class Contact extends Component {
 
 
 
-                    <View style={styles.containerStyle}>
+                            <View style={styles.containerStyle}>
                         <View style={styles.buttonStyle} >
 
                              
@@ -74,7 +76,8 @@ class Contact extends Component {
                                 </Text>
                                 Str. Ienăchiţă Văcărescu Nr. 60{'\n'}
                                 Bucureşti, Sector 4, 040157{'\n'}
-                                Email: office@untrr.ro{'\n'}
+                                Email: <Autolink text="office@untrr.ro" /> {'\n'}
+                                
                             </Text>
 
                             
@@ -83,9 +86,9 @@ class Contact extends Component {
                                 Emitere roviniete{'\n'}
                                 </Text>
                                 Dna. Florina Sburlan{'\n'}
-                                Telefon: 021-337.47.42{'\n'}
+                                Telefon: <Autolink text="021-337-4742" phone={true}/> {'\n'}   
                                 Fax: 021-337.47.41{'\n'}
-                                Email: florina.sburlan@untrr.ro
+                                Email: <Autolink text="florina.sburlan@untrr.ro" /> {'\n'}
                             </Text>
                             <View style={styles.insideStyle} >
                                 <Text

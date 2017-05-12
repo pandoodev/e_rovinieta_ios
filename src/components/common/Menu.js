@@ -56,9 +56,19 @@ module.exports = class Menu extends Component {
       return this.props.rovignettesInCart
     }
     if (this.state.itemsInCart.length > 0) {
-      return ('(' + this.state.itemsInCart.length + ' in coș)');
+      return ('(' + this.state.itemsInCart.length + ')');
     }
   }
+
+   bridgeItemsInCart() {
+    if (this.props.bridgePassesInCart != undefined) {
+      return this.props.bridgePassesInCart
+    }
+    if (this.state.bridgeItemsInCart!=undefined && this.state.bridgeItemsInCart.length> 0) {
+      return ('(' + this.state.bridgeItemsInCart.length + ')');
+    }
+  }
+
   render() {
     return (
       <ScrollView scrollsToTop={false} style={styles.menu}>
@@ -87,7 +97,7 @@ module.exports = class Menu extends Component {
           <View style={styles.rowItem}>
             <Image
               style={styles.smallIcon}
-              source={require('../../../assets/menu/rovignette.png')} />
+              source={require('../../../assets/menu/icon-road1.png')} />
             <View>
               <Text
                 onPress={() => { this.props.onItemSelected('dashboard'); Actions.shop({ responseData: this.props.responseData, location: 'rovignette' }) }}
@@ -101,12 +111,12 @@ module.exports = class Menu extends Component {
           <View style={styles.rowItem}>
             <Image
               style={styles.smallIcon}
-              source={require('../../../assets/menu/fetesti.png')} />
+              source={require('../../../assets/menu/icon-road1.png')} />
             <View>
               <Text
                 onPress={() => { this.props.onItemSelected('bridge_shop'); Actions.bridge_shop({ responseData: this.props.responseData, location: 'pod_fetesti' }) }}
                 style={styles.item}>
-                Fetesti {this.itemsInCart()}
+                Taxă pod Fetești {this.bridgeItemsInCart()}
               </Text>
             </View>
 

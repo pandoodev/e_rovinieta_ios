@@ -69,6 +69,7 @@ class BridgePaymentConfirmation extends Component {
     return (
       <WebView
         source={{ uri: this.state.uri }}
+        onLoadEnd={this.onLoadEndFunction.bind(this)}
         onNavigationStateChange={this._onNavigationStateChange.bind(this)}
       />
     );
@@ -76,4 +77,4 @@ class BridgePaymentConfirmation extends Component {
 };
 
 
-export default BridgePaymentConfirmation;
+export default PaymentConfirmation;

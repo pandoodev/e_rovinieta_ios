@@ -6,7 +6,7 @@ import axios from 'axios';
 import querystring from 'query-string';
 import Moment from 'moment'
 
-class BridgeHistory extends Component {
+class History extends Component {
 
 	state = { selected: '', history: '', loading: true };
 
@@ -25,10 +25,12 @@ class BridgeHistory extends Component {
 		console.log("--getOrderHistory--")
 		var self = this;
 
-		axios.post('https://api.taxa-pod-fetesti.ro/mobile/1.0/get',
-			querystring.stringify({	
+
+
+		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
+			querystring.stringify({
 				tag: 'orders',
-				device: 'android',
+				device: 'ios',
 				token: this.props.responseData.user.token
 			}), {
 				headers: {
@@ -38,13 +40,10 @@ class BridgeHistory extends Component {
 
 				if (response.data.success) {
 
-					console.log("History for Pod Fetesti");
-					console.log(response.data);
-					console.log("History for Pod Fetesti");
-					
 					response.data.orders.sort(function (a, b) {
-						var keyA = a.orderID;
-							keyB = b.orderID;						
+						var keyA = Moment(a.startDate),
+							keyB = Moment(b.startDate);
+						// Compare the 2 dates
 						if (keyA < keyB) return 1;
 						if (keyA > keyB) return -1;
 						return 0;
@@ -120,7 +119,7 @@ class BridgeHistory extends Component {
 						<View style={styles.containerStyle}>
 
 							<Text style={styles.textHeaderStyle}>Comanda</Text>
-							<Text style={styles.textHeaderStyle}>Taxa</Text>
+							<Text style={styles.textHeaderStyle}>Rovinieta</Text>
 						</View>
 
 						{this.state.history.map(function (o, i) {
@@ -137,7 +136,7 @@ class BridgeHistory extends Component {
 									<View style={styles.rightItemContainerStyle}>
 										<Text style={styles.vehicleNoStyle} key={4}>{o.vehicleNo}</Text>
 										<Text style={styles.textStyle} key={5}>{o.endDate}</Text>
-										{/*<Text style={styles.textStyle} key={6}>{o.startDate}</Text>*/}
+										<Text style={styles.textStyle} key={6}>{o.startDate}</Text>
 
 									</View>
 
@@ -202,7 +201,6 @@ const styles = {
 		borderWidth: 1,
 		borderRadius: 2,
 		borderColor: '#ddd',
-		borderBottomWidth: 0,
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.1,
@@ -261,4 +259,4 @@ const styles = {
 	},
 };
 
-export default BridgeHistory;
+export default History;

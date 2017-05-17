@@ -60,7 +60,8 @@ class Cart extends Component {
 		this.state = {
 			itemsInCart: null,
 			loading: true,
-			loadingForRedirect:false
+			loadingForRedirect: false,
+			redirecting: false
 		};
 
 		inCartRovignetteKey = this.props.responseData.user.token;
@@ -143,10 +144,13 @@ class Cart extends Component {
 
 	//Called when buy items from cart button is pressed
 	buyItemsButton() {
-		this.setState({loadingForRedirect:true});
-		this.setState({itemsInCart:''});
+
+		this.setState({ loadingForRedirect: true });
+		this.setState({ itemsInCart: '' });
 		this.removeFromCartAfterBuy();
 		this.prepareData(this.state.itemsInCart);
+		this.setState({ redirecting: true });
+
 		//console.log("Items in cart state variable");
 
 		//console.log(this.state.itemsInCart);
@@ -188,8 +192,7 @@ class Cart extends Component {
 
 	}
 
-	stringifyPreparedRovignettes(tag,token,device,profileID,preparedRovignettes)
-	{
+	stringifyPreparedRovignettes(tag, token, device, profileID, preparedRovignettes) {
 
 		result = "";
 
@@ -268,6 +271,19 @@ class Cart extends Component {
 	showItemsToUser() {
 		var self = this;
 		//Displaying empty cart if no items in storage
+
+		if (this.state.redirecting) {
+
+			return (
+				<View style={styles.emptyCartContainerStyle}>
+					<View style={styles.emptyCartTextStyle} >
+						<Text >Se redirectează către procesatorul de plăți...</Text>
+
+					</View>
+				</View>
+			);
+		}
+
 		if (this.state.itemsInCart.length == 0)
 			return (
 				<View style={styles.emptyCartContainerStyle}>
@@ -285,20 +301,30 @@ class Cart extends Component {
 				<ScrollView >
 
 					<View style={styles.containerStyle}>
-						<Text style={styles.nrCrtHeaderStyle}>Nr.</Text>
-						<Text style={styles.autonrHeaderStyle}>Nr. auto</Text>
-						<Text style={styles.textHeaderStyle}>  Incepe la</Text>
-						<Text style={styles.textHeaderStyle}></Text>
+						{/*<Text style={styles.nrCrtHeaderStyle}>Nr.</Text>*/}
+						{/*<Text style={styles.autonrHeaderStyle}> Auto</Text>*/}
+						<Text style={styles.textHeaderStyle}>Rovinieta</Text>
+						<Text style={styles.textIconHeaderStyle}></Text>
 
 					</View>
 
 					{this.state.itemsInCart.map(function (o, i) {
 						return (
 
-							<View key={i} style={styles.elementStyle}>
-								<Text style={styles.nrCrtStyle} key={0}> {i + 1}.</Text>
-								<Text style={styles.autonrStyle} key={1}>{o.vehicleNo}</Text>
-								<Text style={styles.textStyle} key={2}>{o.startDate}</Text>
+						<View key={i} style={styles.elementStyle}>
+								{/*<Text style={styles.nrCrtStyle} key={0}> {i + 1}.</Text>*/}
+								{/*<Text style={styles.autonrStyle} key={1}>
+																
+								</Text>*/}
+								<Text style={styles.textStyle} key={2}>
+									{o.vehicleNo} 
+									{'\n'}
+									{o.chasisNo}								
+									{'\n'}
+									{'De la '}{o.startDate}
+									{'\n'}
+									{o.validityDays}		
+								</Text>
 								<TouchableOpacity style={styles.iconContainerStyle} onPress={() => { self.deleteElementFromCart(i) }} key={3}>
 									<Image
 										style={styles.deleteItemButtonStyle}
@@ -409,28 +435,42 @@ const styles = {
 		width: 5,
 	},
 	textStyle: {
-		  flex: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 5,
-    color: 'black',
-    height: 30,
-    paddingTop: 6,
-    borderColor: '#bbb',
-    borderWidth: 1,
+		flex: 5,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'black',
+		height: 90,
+		paddingTop: 6,
+		borderColor: '#bbb',
+		borderWidth: 1,
 
 	},
 	nrCrtStyle: {
 	flex: 1,
 
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 5,
-    color: 'black',
-    height: 30,
-    paddingTop: 6,
-    borderColor: '#bbb',
-    borderWidth: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'black',
+		height: 50,
+		paddingTop: 6,
+		borderColor: '#bbb',
+		borderWidth: 1,
+
+	},
+	nrCrtHeaderStyle: {
+		flex: 1.6,
+		paddingTop: 3,
+		backgroundColor: '#222222',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'white',
+		height: 30,
+		fontSize: 16,
+		borderColor: '#222222',
+		borderWidth: 1,
 
 	},
 	emptyCartContainerStyle: {
@@ -455,58 +495,77 @@ const styles = {
 		shadowOpacity: 0.1,
 		shadowRadius: 2,
 	},
-	  autonrHeaderStyle: {
-    flex: 5,
-    paddingTop: 3,
-    backgroundColor: '#222222',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 5,
-    color: 'white',
-    height: 30,
-    fontSize: 16,
-  },
-  textHeaderStyle: {
-    flex: 5,
-    paddingTop: 3,
-    backgroundColor: '#222222',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 5,
-    color: 'white',
-    height: 30,
-    fontSize: 16,
+	autonrHeaderStyle: {
+		flex: 3,
+		paddingTop: 3,
+		backgroundColor: '#222222',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'white',
+		height: 30,
+		fontSize: 16,
+	},
+	 autonrStyle: {
+		flex: 3,
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'black',
+		height: 50,
+		paddingTop: 6,
 
+		borderColor: '#bbb',
+		borderWidth: 1,
+	},
 
-  },
-  nrCrtHeaderStyle: {
-    flex: 1.6,
-    paddingTop: 3,
-    backgroundColor: '#222222',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 5,
-    color: 'white',
-    height: 30,
-    fontSize: 16,
+	// 	textStyle: {
+	// 	flex: 5,
+	// 	justifyContent: 'center',
+	// 	alignItems: 'center',
+	// 	paddingLeft: 5,
+	// 	color: 'black',
+	// 	height: 50,
+	// 	paddingTop: 6,
+	// 	borderColor: '#bbb',
+	// 	borderWidth: 1,
 
-  },autonrStyle: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 5,
-    color: 'black',
-    height: 30,
-    paddingTop: 6,
+	// },
+	textHeaderStyle: {
+		flex: 5,
+		paddingTop: 3,
+		backgroundColor: '#222222',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'white',
+		height: 30,
+		fontSize: 16,
+		
+		
+		borderColor: '#222222',
+		borderWidth: 1,
 
-    borderColor: '#bbb',
-    borderWidth: 1,
-  },	iconContainerStyle: {
+	},
+	textIconHeaderStyle: {
+		flex: 2,
+		paddingTop: 3,
+		backgroundColor: '#222222',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingLeft: 5,
+		color: 'white',
+		height: 30,
+		fontSize: 16,
+
+	},
+
+	 iconContainerStyle: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
 		paddingLeft: 5,
-		height: 30,
+		height: 90,
 		borderColor: '#bbb',
 		borderWidth: 1,
 

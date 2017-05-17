@@ -72,7 +72,7 @@ class Dashboard extends Component {
               onPress={() => { Actions.shop({ responseData: this.props.responseData, location: 'rovignette' }); }}
               style={styles.buttonStyle}>
 
-              <Text style={styles.welcomeText}> Rovinietă</Text>
+              <Text style={styles.welcomeText}> Cumpără rovinietă</Text>
 
             </TouchableOpacity>
             
@@ -85,7 +85,7 @@ class Dashboard extends Component {
 
             </TouchableOpacity>
 
-            <Text style={styles.smallText}> Serviciu oferit de UNTRR - distribuitor autorizat CNAIR pentru emitere de roviniete și peaj electronic</Text>
+             <Text style={styles.smallText}> Serviciu oferit de UNTRR - distribuitor autorizat CNAIR pentru emitere de roviniete și peaj electronic</Text>
             <Text
               style={styles.linkText}
               onPress={() => Linking.openURL('https://www.e-rovinieta.ro/ro/contact')}

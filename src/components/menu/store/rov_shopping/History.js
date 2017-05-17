@@ -135,8 +135,8 @@ class History extends Component {
 
 									<View style={styles.rightItemContainerStyle}>
 										<Text style={styles.vehicleNoStyle} key={4}>{o.vehicleNo}</Text>
-										<Text style={styles.textStyle} key={5}>{o.endDate}</Text>
-										<Text style={styles.textStyle} key={6}>{o.startDate}</Text>
+										<Text style={styles.textStyle} key={5}>{o.startDate}</Text>
+										<Text style={styles.textStyle} key={6}>{o.endDate}</Text>
 
 									</View>
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Button, Image, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import CarCategories from './BridgeCarCategories';
+import CarCategories from './CarCategories';
 import Header from '../../../common/Header';
-import Cart from './BridgeCart';
-import History from './BridgeHistory';
+import Cart from './Cart';
+import History from './History';
 //menu
 const SideMenu = require('react-native-side-menu');
 const Menu = require('../../../common/Menu');
@@ -11,11 +11,14 @@ import MenuButton from '../../../common/MenuButton';
 //menu
 
 import { Actions } from 'react-native-router-flux';
+
+
 import { WebView } from 'react-native';
 
-class BridgePaymentConfirmation extends Component {
+class PaymentConfirmation extends Component {
 
   state = { noRedirects: 0, uri: "" };
+
 
   //initiate state items with constructor
   constructor(props) {
@@ -23,6 +26,10 @@ class BridgePaymentConfirmation extends Component {
     this.state = {
       uri:this.props.linkToAccess
     };
+  }
+
+  componentWillMount() {
+
   }
 
   // Start side-menu functions
@@ -46,22 +53,18 @@ class BridgePaymentConfirmation extends Component {
 
   _onNavigationStateChange(webViewState) {
 
-    console.log("webstate");
-    console.log(webViewState);
-    console.log("webstate");
-
-    if(webViewState.url.indexOf("/apps/success") >= 0 ||
-    webViewState.url.indexOf("/apps/pending") >= 0 ||
-    webViewState.url.indexOf("/apps/failed") >= 0)
+    if(webViewState.url.indexOf("/apps/success") >= 0 || 
+    webViewState.url.indexOf("/apps/failed") >= 0 || 
+    webViewState.url.indexOf("/apps/pending") >= 0)
     {
       console.log("Redirecting...");  
-      Actions.bridge_shop({
+      Actions.shop({
         componentToDisplay: 'history',
         responseData: this.props.responseData
       });
     }
-  }
 
+  }
 
 
   render() {
@@ -69,11 +72,15 @@ class BridgePaymentConfirmation extends Component {
     return (
       <WebView
         source={{ uri: this.state.uri }}
+        onLoadEnd={this.onLoadEndFunction.bind(this)}
         onNavigationStateChange={this._onNavigationStateChange.bind(this)}
       />
     );
+
+
+
   }
 };
 
 
-export default BridgePaymentConfirmation;
+export default PaymentConfirmation;

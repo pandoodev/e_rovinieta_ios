@@ -64,7 +64,7 @@ class BridgeCart extends Component {
 			redirecting: false
 		};
 
-		inCartRovignetteKeyBridge = this.props.responseData.user.token+"bridge";
+		inCartRovignetteKeyBridge  = this.props.responseData.user.token+"bridge";
 	}
 
 	//Getting data from AsyncStorage into state variable
@@ -113,8 +113,8 @@ class BridgeCart extends Component {
 		var currentItemsInCart = this.state.itemsInCart;
 		currentItemsInCart.splice(elementPosition, 1);
 		this.setState({ itemsInCart: currentItemsInCart });
-		this._removeStorage(inCartRovignetteKeyBridge);
-		this._addToStorage(inCartRovignetteKeyBridge, JSON.stringify(currentItemsInCart));
+		this._removeStorage(inCartRovignetteKeyBridge );
+		this._addToStorage(inCartRovignetteKeyBridge , JSON.stringify(currentItemsInCart));
 		this.props.deleteFromCart();
 
 
@@ -127,15 +127,15 @@ class BridgeCart extends Component {
 	removeFromCartAfterBuy() {
 		this.setState({ itemsInCart: '' });
 		var currentItemsInCart = '';
-		this._removeStorage(inCartRovignetteKeyBridge);
-		this._addToStorage(inCartRovignetteKeyBridge, JSON.stringify(currentItemsInCart));
+		this._removeStorage(inCartRovignetteKeyBridge );
+		this._addToStorage(inCartRovignetteKeyBridge , JSON.stringify(currentItemsInCart));
 		this.props.deleteFromCart();
 
 	}
 
 	//Removes stored cart items from AsyncStorage
 	deleteItems() {
-		this._removeStorage(inCartRovignetteKeyBridge);
+		this._removeStorage(inCartRovignetteKeyBridge );
 		this.setState({ itemsInCart: "" });
 		this.setState({ loading: false });
 	}
@@ -173,7 +173,7 @@ class BridgeCart extends Component {
 				{
 					'categoryID': obj[i]['categoryID'],
 					'priceID': obj[i]['priceID'],
-					//'startDate': obj[i]['startDate'],
+					'startDate': obj[i]['startDate'],
 					'vehicleNo': obj[i]['vehicleNo'],
 					'chasisNo': obj[i]['chasisNo'],
 					'vehicleCountry': obj[i]['vehicleCountry']
@@ -213,7 +213,7 @@ class BridgeCart extends Component {
 	}
 
 	generateInvoice(preparedRovignettes, userInformation) {
-		url = 'https://www.taxa-pod-fetesti.ro/ro/apps/payment/';
+		url = 'https://www.e-rovinieta.ro/ro/apps/payment';
 
 		//this.deleteItems();
 
@@ -245,7 +245,8 @@ class BridgeCart extends Component {
 
 			self.deleteItems();
 
-			linkToAccess = "https://www.taxa-pod-fetesti.ro/ro/transaction/" + userInformation[3];
+
+			linkToAccess = "https://www.e-rovinieta.ro/ro/transaction/" + userInformation[3];
 			linkToAccess += "?a=" + Math.random();
 			console.log("profileID url");
 			console.log(linkToAccess);
@@ -299,10 +300,10 @@ class BridgeCart extends Component {
 				<ScrollView >
 
 					<View style={styles.containerStyle}>
-						{/*<Text style={styles.nrCrtHeaderStyle}>Nr.</Text>
-						<Text style={styles.autonrHeaderStyle}>Nr. auto</Text>*/}
-						<Text style={styles.textHeaderStyle}>  Nr. caroserie</Text>
-						<Text style={styles.textIconHeaderStyle}></Text>
+						<Text style={styles.nrCrtHeaderStyle}>Nr.</Text>
+						<Text style={styles.autonrHeaderStyle}>Nr. auto</Text>
+						<Text style={styles.textHeaderStyle}>  Incepe la</Text>
+						<Text style={styles.textHeaderStyle}></Text>
 
 					</View>
 
@@ -310,16 +311,9 @@ class BridgeCart extends Component {
 						return (
 
 							<View key={i} style={styles.elementStyle}>
-								{/*<Text style={styles.nrCrtStyle} key={0}> {i + 1}.</Text>
-								<Text style={styles.autonrStyle} key={1}>{o.vehicleNo}</Text>*/}
-								<Text style={styles.textStyle} key={2}>
-									{o.vehicleNo} 
-									{'\n'}
-									{o.chasisNo}								
-									{'\n'}																	
-									{o.nrPasses}																										
-									
-								</Text>
+								<Text style={styles.nrCrtStyle} key={0}> {i + 1}.</Text>
+								<Text style={styles.autonrStyle} key={1}>{o.vehicleNo}</Text>
+								<Text style={styles.textStyle} key={2}>{o.startDate}</Text>
 								<TouchableOpacity style={styles.iconContainerStyle} onPress={() => { self.deleteElementFromCart(i) }} key={3}>
 									<Image
 										style={styles.deleteItemButtonStyle}
@@ -334,7 +328,7 @@ class BridgeCart extends Component {
 						<View style={styles.buttonStyle}>
 
 							<Button onPress={this.props.changeParentState}>
-								Adaugă în coș
+								Adaugă rovinieta
 	  </Button>
 
 						</View>
@@ -435,7 +429,7 @@ const styles = {
 		alignItems: 'center',
 		paddingLeft: 5,
 		color: 'black',
-		height: 70,
+		height: 30,
 		paddingTop: 6,
 		borderColor: '#bbb',
 		borderWidth: 1,
@@ -471,7 +465,6 @@ const styles = {
 		borderWidth: 1,
 		borderRadius: 2,
 		borderColor: '#ddd',
-		borderBottomWidth: 0,
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.1,
@@ -528,22 +521,10 @@ const styles = {
 		justifyContent: 'center',
 		alignItems: 'center',
 		paddingLeft: 5,
-		height: 70,
+		height: 30,
 		borderColor: '#bbb',
 		borderWidth: 1,
 
-
-	},
-		textIconHeaderStyle: {
-		flex: 2,
-		paddingTop: 3,
-		backgroundColor: '#222222',
-		justifyContent: 'center',
-		alignItems: 'center',
-		paddingLeft: 5,
-		color: 'white',
-		height: 30,
-		fontSize: 16,
 
 	},
 };

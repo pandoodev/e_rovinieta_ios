@@ -51,24 +51,15 @@ class PaymentConfirmation extends Component {
   }
   // !!!End side-menu functions!!!
 
-  onLoadEndFunction() {
-
-    this.state.noRedirects++;
-
-    if (this.state.noRedirects > 1) {
-      console.log(this.props.responseData);
-      Actions.shop({
-        componentToDisplay: 'history',
-        responseData: this.props.responseData
-      });
-    }
-  }
-
   _onNavigationStateChange(webViewState) {
 
-    if(webViewState.url.indexOf("/apps/success") >= 0 || 
-    webViewState.url.indexOf("/apps/failed") >= 0 || 
-    webViewState.url.indexOf("/apps/pending") >= 0)
+    console.log("webViewState");
+    console.log(webViewState);
+    console.log("webViewState");
+
+    if(webViewState.url.indexOf("/apps/success") >= 0 ||
+    webViewState.url.indexOf("/apps/pending") >= 0 ||
+    webViewState.url.indexOf("/apps/failed") >= 0)
     {
       console.log("Redirecting...");  
       Actions.shop({
@@ -85,7 +76,6 @@ class PaymentConfirmation extends Component {
     return (
       <WebView
         source={{ uri: this.state.uri }}
-        onLoadEnd={this.onLoadEndFunction.bind(this)}
         onNavigationStateChange={this._onNavigationStateChange.bind(this)}
       />
     );

@@ -51,7 +51,8 @@ class AddtoCart extends Component {
 			arrValabilitiesValues: [],
 			arrValabilitiesLabels: [],
 			selectedCountryLabel: 'ROMANIA',
-			selectedValabilityLabel: ''
+			selectedValabilityLabel: '',
+			validityDays:'7 zile'
 
 		}
 		inCartRovignetteKey = this.props.responseData.user.token;
@@ -173,6 +174,7 @@ class AddtoCart extends Component {
 								self.setState({ nrDays: valabilitiesWithPrices[0].priceID });
 								self.setState({ selectedValabilityLabel: valabilitiesWithPrices[0].description });
 								self.setState({ error: '', loadingPrices: false, buttonLoading: false });
+								self.setState({validityDays: valabilitiesWithPrices[0].description});
 
 							}
 							if (response.data.success === 0) {
@@ -227,37 +229,7 @@ class AddtoCart extends Component {
 		}
 
 	}
-renderCountries() {
-		if (this.state.loading || this.state.loading == undefined) {
-			return <Spinner size='small' />;
-		}
-		return (
-			<View style={styles.pickerContainerStyle}>
 
-				<Text
-					style={styles.textStyle}
-					onPress={() => {
-						this.refs.countries.show();
-					}}
-				>
-					{this.state.selectedCountryLabel}
-				</Text>
-
-				<SimplePicker
-					ref={'countries'}
-					options={this.state.arrCountriesValues}
-					labels={this.state.arrCountriesLabels}
-					onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel:this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
-					itemStyle={{
-						fontSize: 25,
-						color: 'black',
-						textAlign: 'center',
-						fontWeight: 'bold',
-					}}
-				/>
-			</View>
-		);
-	}
 	getPrices() {
 		var self = this;
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
@@ -321,7 +293,13 @@ renderCountries() {
 	}
 
 	componentWillMount() {
-		this.setState({ startDate: this.getCurerntDate(), nrDays: "1", error: "" });
+
+		console.log("Addtocartprops");
+		console.log(this.props);
+		console.log("Addtocartprops");
+
+
+		this.setState({ startDate: this.getCurerntDate(), country: "1", nrDays: "1", error: "" });
 		this.getCountries();
 		this.getProfileID();
 		this.getValabilities();
@@ -335,6 +313,37 @@ renderCountries() {
 		//console.log(this.props.responseData);
 	}
 	
+renderCountries() {
+		if (this.state.loading || this.state.loading == undefined) {
+			return <Spinner size='small' />;
+		}
+		return (
+			<View style={styles.pickerContainerStyle}>
+
+				<Text
+					style={styles.textStyle}
+					onPress={() => {
+						this.refs.countries.show();
+					}}
+				>
+					{this.state.selectedCountryLabel}
+				</Text>
+
+				<SimplePicker
+					ref={'countries'}
+					options={this.state.arrCountriesValues}
+					labels={this.state.arrCountriesLabels}
+					onSubmit={(loc) => this.setState({ country: loc, selectedCountryLabel:this.state.arrCountriesLabels[this.state.arrCountriesValues.indexOf(loc)] })}
+					itemStyle={{
+						fontSize: 25,
+						color: 'black',
+						textAlign: 'center',
+						fontWeight: 'bold',
+					}}
+				/>
+			</View>
+		);
+	}
 	renderButton() {
 		if (this.state.buttonLoading) {
 			return <Spinner size='small' />;
@@ -388,22 +397,44 @@ renderCountries() {
 			});
 	}
 
-	addToCartButton() {
-		//this.setState({ buttonLoading: true });
-		console.log(this.state.nrDays + 'nrDays');
-		console.log(this.state.country + 'country');
-		console.log(this.state.startDate + 'startDate');
+	getValabilityDaysForCurrentPriceID(priceID)
+	{
+		for(var x in this.state.pricesAndValabilities)
+		{
+			var current = this.state.pricesAndValabilities[x];
+			if(priceID === current.priceID)
+			{
+				return current.description;
+			}
+		}
 
+		return "";
+	}
+
+	addToCartButton() {
+		this.setState({ buttonLoading: true });
+
+		console.log("this.props");
+		console.log(this.props);
+		console.log("this.props");
+		console.log("this.state");
+		console.log(this.state);
+		console.log("this.state");
+
+
+		this.state.validityDays = this.getValabilityDaysForCurrentPriceID(this.state.priceID);
+		
 		if (this.checkIfNotEmpty() == 1) {
 			this.validateRovignette(
 				this.props.responseData.user.token,
 				this.state.profileID,
 				this.props.categoryID,
-				this.state.nrDays,
+				this.state.priceID,
 				this.state.startDate,
 				this.state.vehicleNo,
 				this.state.chasisNo,
-				this.state.country);
+				this.state.country,
+				this.state.validityDays);
 		}
 		else {
 			this.setState({ buttonLoading: false });
@@ -441,7 +472,7 @@ renderCountries() {
 	}
 
 	validateRovignette(argToken, argProfileID, argCategoryID, argPriceID,
-		argStartDate, argVehicleNo, argChasisNo, argVehicleCountry) {
+		argStartDate, argVehicleNo, argChasisNo, argVehicleCountry, validityDays) {
 
 		let rovignetteInfo = [
 			{
@@ -455,7 +486,8 @@ renderCountries() {
 				'startDate': argStartDate,
 				'vehicleNo': argVehicleNo,
 				'chasisNo': argChasisNo,
-				'vehicleCountry': argVehicleCountry
+				'vehicleCountry': argVehicleCountry,
+				'validityDays': validityDays,
 			}
 		];
 		var self = this;
@@ -616,7 +648,7 @@ renderCountries() {
 					<ScrollView >
 
 						<Card >
-							<Text style={styles.pageTitleStyle}> {this.props.categoryDescription}</Text>
+							<Text style={styles.pageTitleStyle}> {this.props.categoryDescription}{'\n'}{'\n'}</Text>
 							<CardSection >
 								<Input
 									label="Număr auto"
@@ -637,7 +669,7 @@ renderCountries() {
 
 									<DatePicker
 										style={{ width: 200 }}
-										date={this.state.date}
+										date={this.state.startDate}
 										mode="date"
 										format="DD-MM-YYYY"
 										minDate={this.getCurerntDate()}
@@ -665,7 +697,7 @@ renderCountries() {
 
 							</CardSection>
 							<CardSection>
-								<Text style={styles.textStyle}>Valabilă</Text>
+								<Text style={styles.textStyle}> Valabilitate </Text>
 								{this.renderValabilitiesAndPrices()}
 
 							</CardSection>

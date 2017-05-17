@@ -13,12 +13,9 @@ import MenuButton from '../../../common/MenuButton';
 //menu
 
 
-
-
-
-inCartRovignetteKeyBridge  = null;
+inCartRovignetteKeyBridge = null;
 class BridgeShopMain extends Component {
-state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
+	state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 
 	//Getting data from AsyncStorage into state variable
 	addCartItemsToState() {
@@ -68,7 +65,9 @@ state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 			case 'categories':
 				return (<BridgeCarCategories responseData={this.props.responseData} />);
 			case 'cart':
-				return (<BridgeCart responseData={this.props.responseData} changeParentState={this.changeStateFromCart.bind(this)} deleteFromCart={this.deleteFromCart.bind(this)} />);
+				return (<BridgeCart responseData={this.props.responseData} 
+				changeParentState={this.changeStateFromCart.bind(this)} 
+				deleteFromCart={this.deleteFromCart.bind(this)} />);
 			case 'history':
 				return (<BridgeHistory responseData={this.props.responseData} />);
 		}
@@ -155,13 +154,13 @@ state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 					backgroundColor: '#FFFFFF',
 				}}>
 					{/*Content start */}
-					<Header headerText={'Roviniete'} />
+					<Header headerText={'Taxa pod Fetesti'} />
 					<View>
 						<View style={styles.containerStyle}>
 							<View style={styles.headerStyle}>
 
 
-								<TouchableOpacity 
+								<TouchableOpacity underlayColor={'rgba(255, 255, 255, 0.2)'}
 									onPress={() => { this.setState({ selected: 'categories' }) }}
 									style={styles.buttonStyle}>
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Button, Image, Text, TouchableOpacity, ScrollView, Dimensions, AsyncStorage } from 'react-native';
-import CarCategories from './CarCategories';
+import BridgeCarCategories from './BridgeCarCategories';
 import Header from '../../../common/Header';
-import Cart from './Cart';
-import History from './History';
+import BridgeCart from './BridgeCart';
+import BridgeHistory from './BridgeHistory';
 
 
 //menu
@@ -16,18 +16,17 @@ import MenuButton from '../../../common/MenuButton';
 
 
 
-inCartRovignetteKey = null;
-class RovignetteShopMain extends Component {
-
-	state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
+inCartRovignetteKeyBridge  = null;
+class BridgeShopMain extends Component {
+state = { selected: 'categories', componentToDisplay: '', itemsInCart: {} };
 
 	//Getting data from AsyncStorage into state variable
 	addCartItemsToState() {
-		console.log(inCartRovignetteKey);
+		console.log(inCartRovignetteKeyBridge );
 
 		var self = this;
 		try {
-			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKey);
+			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKeyBridge );
 			if (itemsInCart !== null) {
 				itemsInCart.then(function (value) {
 					if (value != null || value != undefined) {
@@ -67,15 +66,15 @@ class RovignetteShopMain extends Component {
 
 		switch (this.state.selected) {
 			case 'categories':
-				return (<CarCategories responseData={this.props.responseData} />);
+				return (<BridgeCarCategories responseData={this.props.responseData} />);
 			case 'cart':
-				return (<Cart responseData={this.props.responseData} changeParentState={this.changeStateFromCart.bind(this)} deleteFromCart={this.deleteFromCart.bind(this)} />);
+				return (<BridgeCart responseData={this.props.responseData} changeParentState={this.changeStateFromCart.bind(this)} deleteFromCart={this.deleteFromCart.bind(this)} />);
 			case 'history':
-				return (<History responseData={this.props.responseData} />);
+				return (<BridgeHistory responseData={this.props.responseData} />);
 		}
 	}
 	componentWillMount() {
-		inCartRovignetteKey = this.props.responseData.user.token;
+		inCartRovignetteKeyBridge  = this.props.responseData.user.token+"bridge";
 		if (this.props.componentToDisplay != undefined) {
 			this.setState({ selected: this.props.componentToDisplay });
 		}
@@ -142,7 +141,7 @@ class RovignetteShopMain extends Component {
 	render() {
 
 		//menu
-		const menu = <Menu onItemSelected={this.onMenuItemSelected} currentItem={this.state.selectedItem} responseData={this.props.responseData} rovignettesInCart={this.itemsInCartMenuFormated()} />;
+		const menu = <Menu onItemSelected={this.onMenuItemSelected} currentItem={this.state.selectedItem} responseData={this.props.responseData}   bridgePassesInCart={this.itemsInCartMenuFormated()}/>;
 		//!!menu!!
 
 		return (
@@ -162,7 +161,7 @@ class RovignetteShopMain extends Component {
 							<View style={styles.headerStyle}>
 
 
-								<TouchableOpacity underlayColor={'rgba(255, 255, 255, 0.2)'}
+								<TouchableOpacity 
 									onPress={() => { this.setState({ selected: 'categories' }) }}
 									style={styles.buttonStyle}>
 
@@ -171,7 +170,7 @@ class RovignetteShopMain extends Component {
 										{this.imageType('categories')}
 									</View>
 
-									<Text style={styles.textStyle}>CumpÄƒrÄƒ  {'\n'}</Text>
+									<Text style={styles.textStyle}>Cumpără  {'\n'}</Text>
 								</TouchableOpacity>
 
 								<TouchableOpacity
@@ -270,4 +269,5 @@ const styles = {
 	}
 };
 
-export default RovignetteShopMain;
+
+export default BridgeShopMain;

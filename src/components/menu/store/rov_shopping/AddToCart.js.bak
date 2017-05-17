@@ -17,8 +17,10 @@ import MenuButton from '../../../common/MenuButton';
 
 
 
+inCartRovignetteKey = null;
 
-class BridgeAddToCart extends Component {
+
+class AddtoCart extends Component {
 	state = {
 		userType: '',
 		profileID: '',
@@ -34,8 +36,6 @@ class BridgeAddToCart extends Component {
 		countries: [], isOpen: false,
 		buttonLoading: false,
 		selectedItem: 'Dashboard',
-		countryObject: null,
-		nrPasses: '1 treceri'
 	};
 
 	constructor(props) {
@@ -52,10 +52,10 @@ class BridgeAddToCart extends Component {
 			arrValabilitiesLabels: [],
 			selectedCountryLabel: 'ROMANIA',
 			selectedValabilityLabel: '',
-			nrPasses:'1 treceri'
+			validityDays:'7 zile'
 
 		}
-		inCartRovignetteKeyBridge = this.props.responseData.user.token+"bridge";
+		inCartRovignetteKey = this.props.responseData.user.token;
 
 	}
 	getVehicleNo() {
@@ -115,13 +115,10 @@ class BridgeAddToCart extends Component {
 
 	getValabilities() {
 		var self = this;
-
-		axios.post('https://api.taxa-pod-fetesti.ro/mobile/1.0/get',
-
+		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'valabilities',
-				device: 'ios',
-				category: self.props.categoryID
+				device: 'android'
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -133,10 +130,11 @@ class BridgeAddToCart extends Component {
 					response.data.valabilities.forEach(function (valability) {
 						valabilities.push(valability);
 					}, this);
-					axios.post('https://api.taxa-pod-fetesti.ro/mobile/1.0/get',
+
+					axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 						querystring.stringify({
 							tag: 'prices',
-							device: 'ios'
+							device: 'android'
 						}), {
 							headers: {
 								"Content-Type": "application/x-www-form-urlencoded"
@@ -154,7 +152,7 @@ class BridgeAddToCart extends Component {
 									for (idx in response.data.prices) {
 										var element = response.data.prices[idx];
 
-										if (element.id == valab.id_tarife_detalii &&
+										if (element.valability_id == valab.id &&
 											element.vehicle_id == self.props.categoryID) {
 											valabilityElement = new Object();
 											valabilityElement.priceID = element.id;
@@ -166,7 +164,7 @@ class BridgeAddToCart extends Component {
 								}
 
 								self.state.pricesAndValabilities = valabilitiesWithPrices;
-								self.setState({ priceID: valabilitiesWithPrices[0].priceID });
+
 								self.state.pricesAndValabilities.map(function (o, i) {
 									arrValabilitiesLabels.push(o.description);
 									arrValabilitiesValues.push(o.priceID);
@@ -176,7 +174,7 @@ class BridgeAddToCart extends Component {
 								self.setState({ nrDays: valabilitiesWithPrices[0].priceID });
 								self.setState({ selectedValabilityLabel: valabilitiesWithPrices[0].description });
 								self.setState({ error: '', loadingPrices: false, buttonLoading: false });
-								self.setState({nrPasses: valabilitiesWithPrices[0].description});
+								self.setState({validityDays: valabilitiesWithPrices[0].description});
 
 							}
 							if (response.data.success === 0) {
@@ -192,7 +190,7 @@ class BridgeAddToCart extends Component {
 
 	}
 
-	renderNumberOfPasses() {
+	renderValabilitiesAndPrices() {
 
 		if (this.state.loadingPrices || this.state.loadingPrices == undefined) {
 			return <Spinner size='small' />;
@@ -237,7 +235,7 @@ class BridgeAddToCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'prices',
-				device: 'ios'
+				device: 'android'
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -259,7 +257,7 @@ class BridgeAddToCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'countries',
-				device: 'ios'
+				device: 'android'
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -295,6 +293,12 @@ class BridgeAddToCart extends Component {
 	}
 
 	componentWillMount() {
+
+		console.log("Addtocartprops");
+		console.log(this.props);
+		console.log("Addtocartprops");
+
+
 		this.setState({ startDate: this.getCurerntDate(), country: "1", nrDays: "1", error: "" });
 		this.getCountries();
 		this.getProfileID();
@@ -309,20 +313,6 @@ class BridgeAddToCart extends Component {
 		//console.log(this.props.responseData);
 	}
 	
-	renderButton() {
-		if (this.state.buttonLoading) {
-			return <Spinner size='small' />;
-		}
-
-		return (
-			//	<Button onPress = {this.onButtonPress.bind(this)}> 
-			<Button onPress={this.addToCartButton.bind(this)}>
-				Adaugă în coș
-		</Button>
-		);
-
-	}
-
 renderCountries() {
 		if (this.state.loading || this.state.loading == undefined) {
 			return <Spinner size='small' />;
@@ -354,9 +344,22 @@ renderCountries() {
 			</View>
 		);
 	}
+	renderButton() {
+		if (this.state.buttonLoading) {
+			return <Spinner size='small' />;
+		}
+
+		return (
+			//	<Button onPress = {this.onButtonPress.bind(this)}> 
+			<Button onPress={this.addToCartButton.bind(this)}>
+				Adaugă în coș
+		</Button>
+		);
+
+	}
 
 	redirectToCart() {
-		Actions.bridge_shop({ responseData: this.props.responseData, componentToDisplay: 'cart' })
+		Actions.shop({ responseData: this.props.responseData, componentToDisplay: 'cart' })
 	}
 	getProfileID() {
 		console.log("this.props.responseData")
@@ -394,39 +397,22 @@ renderCountries() {
 			});
 	}
 
-	getValabilityDaysForCurrentPriceID(priceID)
-	{
-		for(var x in this.state.pricesAndValabilities)
-		{
-			var current = this.state.pricesAndValabilities[x];
-			if(priceID === current.priceID)
-			{
-				return current.description;
-			}
-		}
-
-		return "";
-	}
-
-
 	addToCartButton() {
-		this.setState({ buttonLoading: true });
+		//this.setState({ buttonLoading: true });
+		console.log(this.state.nrDays + 'nrDays');
+		console.log(this.state.country + 'country');
+		console.log(this.state.startDate + 'startDate');
 
-		this.state.nrPasses = this.getValabilityDaysForCurrentPriceID(this.state.priceID);
-
-		
 		if (this.checkIfNotEmpty() == 1) {
 			this.validateRovignette(
 				this.props.responseData.user.token,
 				this.state.profileID,
 				this.props.categoryID,
-				this.state.priceID,
+				this.state.nrDays,
 				this.state.startDate,
 				this.state.vehicleNo,
 				this.state.chasisNo,
-				this.state.country,
-				this.state.nrPasses);
-
+				this.state.country);
 		}
 		else {
 			this.setState({ buttonLoading: false });
@@ -464,38 +450,28 @@ renderCountries() {
 	}
 
 	validateRovignette(argToken, argProfileID, argCategoryID, argPriceID,
-		argStartDate, argVehicleNo, argChasisNo, argVehicleCountry, nrPasses) {
-
-
-
+		argStartDate, argVehicleNo, argChasisNo, argVehicleCountry) {
 
 		let rovignetteInfo = [
 			{
 				'token': this.props.responseData.user.token,
 				'tag': 'initiate',
 				'device': 'android',
-				//'token': argToken,
+				'token': argToken,
 				'profileID': argProfileID,
 				'categoryID': argCategoryID,
 				'priceID': argPriceID,
-				
+				'startDate': argStartDate,
 				'vehicleNo': argVehicleNo,
 				'chasisNo': argChasisNo,
-				'vehicleCountry': argVehicleCountry,
-				'nrPasses': nrPasses
+				'vehicleCountry': argVehicleCountry
 			}
 		];
 		var self = this;
 		var aux = rovignetteInfo;
-	
+		console.table(rovignetteInfo);
 
-		console.log("rovignetteInfo");
-		console.log(rovignetteInfo);
-		console.log("rovignetteInfo");
-
-
-		axios.post('https://api.taxa-pod-fetesti.ro/mobile/1.0/get',
-
+		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify(
 				rovignetteInfo[0]),
 			{
@@ -510,7 +486,7 @@ renderCountries() {
 			console.log(response.data);
 
 			if (response.data.success) {
-				self.appendIfNotEmpty(inCartRovignetteKeyBridge, rovignetteInfo);
+				self.appendIfNotEmpty(inCartRovignetteKey, rovignetteInfo);
 				return 1;
 			}
 
@@ -565,15 +541,13 @@ renderCountries() {
 	appendIfNotEmpty(STORAGE_KEY_ARG, newItem) {
 		var self = this;
 		try {
-			
-			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKeyBridge);
-
+			var itemsInCart = AsyncStorage.getItem(inCartRovignetteKey);
 			if (itemsInCart !== null) {
 				itemsInCart.then(function (value) {
 					if (value != null || value != undefined) {
 						var itemsInCartJson = JSON.parse(value);
 
-						if (0) {
+						if (itemsInCartJson.length >= 9) {
 							console.log(itemsInCartJson.length + "can't add more than 8 items to cart");
 							self.message("Atenție", "Nu pot fi adăugate mai mult de 8 roviniete în coș!")
 							self.setState({ loading: false });
@@ -651,7 +625,7 @@ renderCountries() {
 					<ScrollView >
 
 						<Card >
-							<Text style={styles.pageTitleStyle}> {this.props.categoryDescription} {'\n'}{'\n'}</Text>
+							<Text style={styles.pageTitleStyle}> {this.props.categoryDescription}</Text>
 							<CardSection >
 								<Input
 									label="Număr auto"
@@ -666,13 +640,33 @@ renderCountries() {
 									onChangeText={chasisNo => this.setState({ chasisNo })}
 								/>
 							</CardSection>
-							{/*<CardSection >
-								<Input
-									label="Motiv cat"
-									value=""
-									onChangeText={chasisNo => this.setState({ chasisNo })}
-								/>
-							</CardSection>*/}
+							<CardSection >
+								<Text style={styles.textStyle}> De la </Text>
+								<View style={styles.pickerContainerStyle}>
+
+									<DatePicker
+										style={{ width: 200 }}
+										date={this.state.date}
+										mode="date"
+										format="DD-MM-YYYY"
+										minDate={this.getCurerntDate()}
+										confirmBtnText="Confirm"
+										cancelBtnText="Cancel"
+										customStyles={{
+											dateIcon: {
+												position: 'absolute',
+												left: 0,
+												top: 4,
+												marginLeft: 0
+											},
+											dateInput: {
+												marginLeft: 36
+											}
+										}}
+										onDateChange={(date) => { this.setState({ startDate: date }) }}
+									/>
+								</View>
+							</CardSection>
 
 							<CardSection>
 								<Text style={styles.textStyle} > Țara </Text>
@@ -680,8 +674,8 @@ renderCountries() {
 
 							</CardSection>
 							<CardSection>
-								<Text style={styles.textStyle}> Treceri </Text>
-								{this.renderNumberOfPasses()}
+								<Text style={styles.textStyle}>Valabilă</Text>
+								{this.renderValabilitiesAndPrices()}
 
 							</CardSection>
 
@@ -772,5 +766,6 @@ const styles = {
 
 	}
 };
-export default BridgeAddToCart;
+
+export default AddtoCart;
 

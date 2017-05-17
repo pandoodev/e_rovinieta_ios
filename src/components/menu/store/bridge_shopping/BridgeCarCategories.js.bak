@@ -23,7 +23,7 @@ class BridgeCarCategories extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'categories',
-				device: 'ios',
+				device: 'android',
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"

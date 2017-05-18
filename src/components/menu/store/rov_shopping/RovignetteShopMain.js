@@ -171,7 +171,7 @@ class RovignetteShopMain extends Component {
 										{this.imageType('categories')}
 									</View>
 
-									<Text style={styles.textStyle}>CumpÄƒrÄƒ  {'\n'}</Text>
+									<Text style={styles.textStyle}>Cumpără {'\n'}</Text>
 								</TouchableOpacity>
 
 								<TouchableOpacity

@@ -30,7 +30,7 @@ class AddtoCart extends Component {
 		loading: true,
 		loadingPrices: true,
 		country: 1,
-		nrDays: 1,
+		priceID: 1,
 		pricesAndValabilities: [],
 		error: '',
 		countries: [], isOpen: false,
@@ -171,7 +171,7 @@ class AddtoCart extends Component {
 								})
 								self.setState({ arrValabilitiesLabels: arrValabilitiesLabels });
 								self.setState({ arrValabilitiesValues: arrValabilitiesValues });
-								self.setState({ nrDays: valabilitiesWithPrices[0].priceID });
+								self.setState({ priceID: valabilitiesWithPrices[0].priceID });
 								self.setState({ selectedValabilityLabel: valabilitiesWithPrices[0].description });
 								self.setState({ error: '', loadingPrices: false, buttonLoading: false });
 								self.setState({validityDays: valabilitiesWithPrices[0].description});
@@ -215,7 +215,7 @@ class AddtoCart extends Component {
 						ref={'valabilities'}
 						options={this.state.arrValabilitiesValues}
 						labels={this.state.arrValabilitiesLabels}
-						onSubmit={(days) => this.setState({ nrDays: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
+						onSubmit={(days) => this.setState({ priceID: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
 						itemStyle={{
 							fontSize: 25,
 							color: 'black',
@@ -299,7 +299,7 @@ class AddtoCart extends Component {
 		console.log("Addtocartprops");
 
 
-		this.setState({ startDate: this.getCurerntDate(), country: "1", nrDays: "1", error: "" });
+		this.setState({ startDate: this.getCurerntDate(), country: "1", priceID: "1", error: "" });
 		this.getCountries();
 		this.getProfileID();
 		this.getValabilities();

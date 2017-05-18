@@ -178,6 +178,7 @@ class BridgeAddToCart extends Component {
 								self.setState({ error: '', loadingPrices: false, buttonLoading: false });
 								self.setState({nrPasses: valabilitiesWithPrices[0].description});
 
+
 							}
 							if (response.data.success === 0) {
 								console.log("unsuccess");
@@ -217,7 +218,7 @@ class BridgeAddToCart extends Component {
 						ref={'valabilities'}
 						options={this.state.arrValabilitiesValues}
 						labels={this.state.arrValabilitiesLabels}
-						onSubmit={(days) => this.setState({ nrDays: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
+						onSubmit={(days) => this.setState({ priceID: days, selectedValabilityLabel: this.state.arrValabilitiesLabels[this.state.arrValabilitiesValues.indexOf(days)] })}
 						itemStyle={{
 							fontSize: 25,
 							color: 'black',
@@ -412,8 +413,10 @@ renderCountries() {
 	addToCartButton() {
 		this.setState({ buttonLoading: true });
 
+		console.log("this.state");
 		this.state.nrPasses = this.getValabilityDaysForCurrentPriceID(this.state.priceID);
-
+		console.log(this.state);
+		console.log("this.state");
 		
 		if (this.checkIfNotEmpty() == 1) {
 			this.validateRovignette(

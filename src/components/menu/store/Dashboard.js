@@ -22,7 +22,24 @@ class Dashboard extends Component {
   };
 
   componentWillMount() {
+function handleFirstConnectivityChange(isConnected) {
+			console.log(isConnected);
+			if(!isConnected){
+				AlertIOS.alert(
+				'Warning',
+				'Please check your internet connection!'
+				);
+			}
+			NetInfo.isConnected.removeEventListener(
+			'change',
+			handleFirstConnectivityChange
+			);
+		}
 
+		NetInfo.isConnected.addEventListener(
+		'change',
+		handleFirstConnectivityChange
+		);
   }
 
   // Start side-menu functions

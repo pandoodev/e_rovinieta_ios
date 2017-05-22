@@ -5,6 +5,8 @@ import MenuButton from '../../common/MenuButton';
 //!menu!!
 import Header from '../../common/Header';
 import React, { Component } from 'react';
+
+
 import {
   Text,
   View,
@@ -12,6 +14,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Linking,
+  NetInfo,
+  AlertIOS
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
@@ -19,27 +23,40 @@ class Dashboard extends Component {
   state = {
     isOpen: false,
     selectedItem: 'Dashboard',
+    isConnected: null
   };
 
   componentWillMount() {
-function handleFirstConnectivityChange(isConnected) {
-			console.log(isConnected);
-			if(!isConnected){
-				AlertIOS.alert(
-				'Warning',
-				'Please check your internet connection!'
-				);
-			}
-			NetInfo.isConnected.removeEventListener(
-			'change',
-			handleFirstConnectivityChange
-			);
-		}
+  }
 
-		NetInfo.isConnected.addEventListener(
-		'change',
-		handleFirstConnectivityChange
-		);
+  componentDidMount() {
+    NetInfo.isConnected.addEventListener(
+      'change',
+      this._handleConnectivityChange
+    );
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ isConnected }); }
+    );
+  }
+
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+				'Network',
+				'Your device is offline! Please connect to the Internet');
+    }
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener(
+      'change',
+      this._handleConnectivityChange
+    );
   }
 
   // Start side-menu functions
@@ -86,16 +103,41 @@ function handleFirstConnectivityChange(isConnected) {
 
 
             <TouchableOpacity
-              onPress={() => { Actions.shop({ responseData: this.props.responseData, location: 'rovignette' }); }}
+              onPress={() => {
+
+                if (!this.state.isConnected) {
+                  AlertIOS.alert(
+                    'Network',
+                    'Your device is offline! Please connect to the Internet');
+                }
+                else {
+                  //..
+                  Actions.shop({ responseData: this.props.responseData, location: 'rovignette' });
+
+                }
+
+              }}
               style={styles.buttonStyle}>
 
               <Text style={styles.welcomeText}> Rovinietă</Text>
 
             </TouchableOpacity>
-            
+
 
             <TouchableOpacity
-              onPress={() => { Actions.bridge_shop({ responseData: this.props.responseData, location: 'pod_fetesti' }); }}
+              onPress={() => { 
+                
+                  if (!this.state.isConnected) {
+                  AlertIOS.alert(
+                    'Network',
+                    'Your device is offline! Please connect to the Internet');
+                }
+                else {
+                  //..
+                  Actions.bridge_shop({ responseData: this.props.responseData, location: 'pod_fetesti' });
+                }
+                
+                 }}
               style={styles.buttonFetestiStyle}>
 
               <Text style={styles.welcomeText}> Taxă pod Fetești</Text>
@@ -125,7 +167,7 @@ const window = Dimensions.get('window');
 
 const styles = {
   containerRov: {
-    paddingTop: window.height*0.06,
+    paddingTop: window.height * 0.06,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     flex: 1,
@@ -153,7 +195,7 @@ const styles = {
   ,
   linkText: {
     fontSize: 20,
-    paddingTop:window.height*0.03,
+    paddingTop: window.height * 0.03,
     textAlign: 'center',
     fontWeight: '600',
 
@@ -196,7 +238,7 @@ const styles = {
     borderRadius: 5,
     marginLeft: 5,
     marginRight: 5,
-    marginTop:10
+    marginTop: 10
 
   },
   imgStyle: {

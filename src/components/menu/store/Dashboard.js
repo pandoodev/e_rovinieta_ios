@@ -151,6 +151,10 @@ class Dashboard extends Component {
             >www.e-rovinieta.ro</Text>
 
           </View>
+
+          	{/*<View style={styles.insideStyle} >
+						<Text>{this.state.isConnected ? 'Online' : 'Offline'}</Text>
+					</View>*/}
           <View style={{ flex: 0.2, paddingBottom: 20, marginLeft: -15 }}>
             <Image source={require('../../../../assets/untr.jpg')} style={styles.imgStyle} />
           </View>

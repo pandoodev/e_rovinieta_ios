@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity, Dimensions, Alert, ScrollView } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Dimensions, Alert, ScrollView,AlertIOS, NetInfo } from 'react-native';
 import { Spinner, Button, } from '../../common';
 import axios from 'axios';
 import querystring from 'query-string';
@@ -30,6 +30,32 @@ class Profile extends Component {
 		});
 	}
 	// !!!End side-menu functions!!!
+	componentDidMount() {
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+    }
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
+    componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+    }
 	message(title, content) {
 		Alert.alert(
 			title,
@@ -138,15 +164,35 @@ class Profile extends Component {
 	}
 
 	addProfileButton(i) {
+		if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
 		console.log('add' + i);
 		Actions.add_profile({ responseData: this.props.responseData, headerTitle: 'Creare profil' });
+		}
 
 	}
 	editProfileButton(i) {
+		if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
 		console.log('edit' + i);
 		Actions.edit_profile({ responseData: this.props.responseData, headerTitle: 'Editare profil', profileToModify: this.state.profiles[i] });
+		}
 	}
 	deleteProfileButton(index) {
+		if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
 		// 		@tag = ‘profile_delete’
 		// @device (‘android’ sau ‘ios’)
 		// @token (Tokenul returnat prin metoda de login)
@@ -162,7 +208,7 @@ class Profile extends Component {
 				{ text: 'OK', onPress: () => { console.log('OK Pressed'); this.confirmDeleteProfile(index) } },
 			],
 			{ cancelable: false }
-		)
+		)}
 	}
 
 	confirmDeleteProfile(index) {

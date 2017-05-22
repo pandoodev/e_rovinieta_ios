@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity, AsyncStorage, Linking, Alert, ScrollView, Dimensions } from 'react-native';
+import { View, Image, Text, TouchableOpacity, AsyncStorage, Linking, Alert, ScrollView, Dimensions,AlertIOS, NetInfo } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from '../../../common';
 import axios from 'axios';
 import querystring from 'query-string';
@@ -48,7 +48,32 @@ class Cart extends Component {
 	// END Storage Methods
 
 
-
+   componentDidMount() {
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+    }
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
+    componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+    }
 
 	componentWillMount() {
 		this.addCartItemsToState();
@@ -145,7 +170,13 @@ class Cart extends Component {
 	//Called when buy items from cart button is pressed
 	buyItemsButton() {
 
-		this.setState({ loadingForRedirect: true });
+    if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
+      	this.setState({ loadingForRedirect: true });
 		this.setState({ itemsInCart: '' });
 		this.removeFromCartAfterBuy();
 		this.prepareData(this.state.itemsInCart);
@@ -154,6 +185,8 @@ class Cart extends Component {
 		//console.log("Items in cart state variable");
 
 		//console.log(this.state.itemsInCart);
+        }
+	
 
 	}
 
@@ -216,6 +249,16 @@ class Cart extends Component {
 		return result;
 	}
 
+addtemsButton(){
+	if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
+	this.props.changeParentState();
+		}
+}
 	generateInvoice(preparedRovignettes, userInformation) {
 		url = 'https://www.e-rovinieta.ro/ro/apps/payment';
 
@@ -338,7 +381,7 @@ class Cart extends Component {
 					<View style={styles.buttonContainerStyle}>
 						<View style={styles.buttonStyle}>
 
-							<Button onPress={this.props.changeParentState}>
+							<Button onPress={this.addtemsButton.bind(this)}>
 								Adaugă rovinieta
 	  </Button>
 

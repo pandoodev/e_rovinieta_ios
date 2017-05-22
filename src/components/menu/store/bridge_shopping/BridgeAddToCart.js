@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Picker, Alert, AsyncStorage, ScrollView } from 'react-native';
+import { View, Text, Picker, Alert, AsyncStorage, ScrollView, NetInfo, AlertIOS } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from '../../../common';
 import DatePicker from 'react-native-datepicker'
 var dateFormat = require('dateformat');
@@ -294,14 +294,36 @@ class BridgeAddToCart extends Component {
 
 		return date;
 	}
-
+  componentDidMount() {
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+    }
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
 	componentWillMount() {
 		this.setState({ startDate: this.getCurerntDate(), country: "1", nrDays: "1", error: "" });
 		this.getCountries();
 		this.getProfileID();
 		this.getValabilities();
 
-
+ NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
 		//this.getCategories();
 
 		//this.getPrices();
@@ -411,6 +433,13 @@ renderCountries() {
 
 
 	addToCartButton() {
+
+        if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
 		this.setState({ buttonLoading: true });
 
 		console.log("this.state");
@@ -442,7 +471,7 @@ renderCountries() {
 				{ cancelable: false }
 			)
 		}
-	}
+	}}
 
 
 	checkIfNotEmpty() {

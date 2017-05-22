@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, Image, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { View, Button, Image, Text, TouchableOpacity, ScrollView, Dimensions, NetInfo, AlertIOS } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Spinner} from '../../../common';
 
@@ -16,7 +16,32 @@ class BridgeCarCategories extends Component {
 		this.getCategories();
 		
 	}
-
+componentDidMount() {
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+    }
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
+    componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+    }
 	getCategories() {
 		var self = this;
 		console.log("--getCategories--");
@@ -65,13 +90,19 @@ class BridgeCarCategories extends Component {
 				<View style={styles.containerStyle}>
 						<TouchableOpacity
 							onPress={() => {
+								if (!this.state.isConnected) {
+				AlertIOS.alert(
+				'Network',
+				'Your device is offline! Please connect to the Internet');
+			}
+			else {
 								Actions.bridge_buy({
 									responseData: this.props.responseData, 
 									category: this.state.categories.categories[0].name,
 									categoryID: this.state.categories.categories[0].id, 
 									categoryDescription: this.state.categories.categories[0].description
 								})
-							}}
+							}}}
 							style={styles.buttonStyle}>
 							<View>
 								<Image
@@ -82,13 +113,19 @@ class BridgeCarCategories extends Component {
 
 						<TouchableOpacity
 							onPress={() => {
+								if (!this.state.isConnected) {
+				AlertIOS.alert(
+				'Network',
+				'Your device is offline! Please connect to the Internet');
+			}
+			else {
 								Actions.bridge_buy({
 									responseData: this.props.responseData, 
 									category: this.state.categories.categories[1].name,
 									categoryID: this.state.categories.categories[1].id, 
 									categoryDescription: this.state.categories.categories[1].description
 								})
-							}}
+							}}}
 
 							style={styles.buttonStyle}>
 							<View>
@@ -103,13 +140,19 @@ class BridgeCarCategories extends Component {
 					<View style={styles.containerStyle}>
 						<TouchableOpacity
 							onPress={() => {
+								if (!this.state.isConnected) {
+				AlertIOS.alert(
+				'Network',
+				'Your device is offline! Please connect to the Internet');
+			}
+			else {
 								Actions.bridge_buy({
 									responseData: this.props.responseData, 
 									category: this.state.categories.categories[2].name,
 									categoryID: this.state.categories.categories[2].id, 
 									categoryDescription: this.state.categories.categories[2].description
 								})
-							}}
+							}}}
 							style={styles.buttonStyle}>
 							<View>
 								<Image
@@ -120,13 +163,19 @@ class BridgeCarCategories extends Component {
 
 						<TouchableOpacity
 							onPress={() => {
+								if (!this.state.isConnected) {
+				AlertIOS.alert(
+				'Network',
+				'Your device is offline! Please connect to the Internet');
+			}
+			else {
 								Actions.bridge_buy({
 									responseData: this.props.responseData, 
 									category: this.state.categories.categories[3].name,
 									categoryID: this.state.categories.categories[3].id, 
 									categoryDescription: this.state.categories.categories[3].description
 								})
-							}}
+							}}}
 							style={styles.buttonStyle}>
 							<View>
 								<Image

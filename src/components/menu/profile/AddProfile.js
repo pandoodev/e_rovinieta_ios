@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Picker, Alert, AsyncStorage, ScrollView } from 'react-native';
+import { View, Text, Picker, Alert, AsyncStorage, ScrollView , NetInfo, AlertIOS} from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from '../../common';
 import DatePicker from 'react-native-datepicker'
 var dateFormat = require('dateformat');
@@ -115,7 +115,32 @@ class AddProfile extends Component {
         this.getCountries();
         this.getCounties();
     }
-
+  componentDidMount() {
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+    }
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
+    componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+    }
     renderButton() {
 
         if (this.state.buttonLoading) {
@@ -163,6 +188,13 @@ class AddProfile extends Component {
     }
 
     submitChangesButton() {
+
+        if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
         this.setState({ buttonLoading: true });
         if (this.state.profileType === 1) {
 
@@ -173,7 +205,7 @@ class AddProfile extends Component {
             console.log("juridic")
             this.createJurProfile();
         }
-
+        }
 
     }
     createPhysProfile() {

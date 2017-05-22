@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, Image, Text, TouchableOpacity, ScrollView, Dimensions, AsyncStorage } from 'react-native';
+import { View, Button, Image, Text, TouchableOpacity, ScrollView, Dimensions, AsyncStorage, NetInfo,AlertIOS } from 'react-native';
 import CarCategories from './CarCategories';
 import Header from '../../../common/Header';
 import Cart from './Cart';
@@ -74,6 +74,34 @@ class RovignetteShopMain extends Component {
 				return (<History responseData={this.props.responseData} />);
 		}
 	}
+	componentDidMount(){
+    NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+	}
+
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
+  componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+    }
+
 	componentWillMount() {
 		inCartRovignetteKey = this.props.responseData.user.token;
 		if (this.props.componentToDisplay != undefined) {
@@ -137,7 +165,42 @@ class RovignetteShopMain extends Component {
 				}
 		}
 	}
+showCart(){
+	
+        if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
+         this.setState({ selected: 'cart' })
+        }
 
+}
+showCategories(){
+	
+        if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
+         this.setState({ selected: 'categories' })
+        }
+
+}
+showHistory(){
+	
+        if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
+         this.setState({ selected: 'history' })
+        }
+
+}
 
 	render() {
 
@@ -163,7 +226,7 @@ class RovignetteShopMain extends Component {
 
 
 								<TouchableOpacity underlayColor={'rgba(255, 255, 255, 0.2)'}
-									onPress={() => { this.setState({ selected: 'categories' }) }}
+									onPress={() => { this.showCategories()}}
 									style={styles.buttonStyle}>
 
 									<View >
@@ -175,7 +238,7 @@ class RovignetteShopMain extends Component {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									onPress={() => { this.setState({ selected: 'cart' }) }}
+									onPress={() => {  this.showCart()}}
 									style={styles.buttonStyle}>
 
 									<View >
@@ -188,7 +251,7 @@ class RovignetteShopMain extends Component {
 
 
 								<TouchableOpacity
-									onPress={() => { this.setState({ selected: 'history' }) }}
+									onPress={() => { this.showHistory()}}
 
 									style={styles.buttonStyle}>
 									<View >

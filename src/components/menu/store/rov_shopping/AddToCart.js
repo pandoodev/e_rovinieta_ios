@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Picker, Alert, AsyncStorage, ScrollView } from 'react-native';
+import { View, Text, Picker, Alert, AsyncStorage, ScrollView, AlertIOS, NetInfo } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from '../../../common';
 import DatePicker from 'react-native-datepicker'
 var dateFormat = require('dateformat');
@@ -58,6 +58,34 @@ class AddtoCart extends Component {
 		inCartRovignetteKey = this.props.responseData.user.token;
 
 	}
+	    componentDidMount() {
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ isConnected }); }
+        );
+    }
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected: isConnected,
+    });
+    if(!isConnected)
+    {
+      AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+    }
+  }
+   componentWillUnmount() {
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+    }
+
+
 	getVehicleNo() {
 
 		if (this.props.plateNo != undefined && this.props.plateNo != '') {
@@ -412,6 +440,13 @@ renderCountries() {
 	}
 
 	addToCartButton() {
+
+		  if (!this.state.isConnected) {
+            AlertIOS.alert(
+                'Network',
+                'Your device is offline! Please connect to the Internet');
+        }
+        else {
 		this.setState({ buttonLoading: true });
 
 		console.log("this.props");
@@ -446,6 +481,7 @@ renderCountries() {
 				],
 				{ cancelable: false }
 			)
+		}
 		}
 	}
 

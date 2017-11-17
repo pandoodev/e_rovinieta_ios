@@ -505,7 +505,7 @@ renderCountries() {
 			{
 				'token': this.props.responseData.user.token,
 				'tag': 'initiate',
-				'device': 'android',
+				'device': 'ios',
 				//'token': argToken,
 				'profileID': argProfileID,
 				'categoryID': argCategoryID,

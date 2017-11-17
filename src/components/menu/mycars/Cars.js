@@ -121,7 +121,7 @@ class Cars extends Component {
     axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
     querystring.stringify({
       tag: 'vehicles',
-      device: 'android',
+      device: 'ios',
       token: this.props.responseData.user.token
     }), {
       headers: {
@@ -145,7 +145,7 @@ class Cars extends Component {
     axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
     querystring.stringify({
       tag: 'countries',
-      device: 'android',
+      device: 'ios',
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -170,7 +170,7 @@ class Cars extends Component {
     axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
     querystring.stringify({
       tag: 'categories',
-      device: 'android',
+      device: 'ios',
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"

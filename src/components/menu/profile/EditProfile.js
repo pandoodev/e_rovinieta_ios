@@ -347,7 +347,7 @@ class EditProfile extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
         querystring.stringify({
             tag: 'countries',
-            device: 'android'
+            device: 'ios'
         }), {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -382,7 +382,7 @@ class EditProfile extends Component {
         axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
         querystring.stringify({
             tag: 'counties',
-            device: 'android'
+            device: 'ios'
         }), {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

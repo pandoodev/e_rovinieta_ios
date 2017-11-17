@@ -146,7 +146,7 @@ class AddtoCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'valabilities',
-				device: 'android'
+				device: 'ios'
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -162,7 +162,7 @@ class AddtoCart extends Component {
 					axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 						querystring.stringify({
 							tag: 'prices',
-							device: 'android'
+							device: 'ios'
 						}), {
 							headers: {
 								"Content-Type": "application/x-www-form-urlencoded"
@@ -263,7 +263,7 @@ class AddtoCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'prices',
-				device: 'android'
+				device: 'ios'
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -285,7 +285,7 @@ class AddtoCart extends Component {
 		axios.post('https://api.e-rovinieta.ro/mobile/1.0/get',
 			querystring.stringify({
 				tag: 'countries',
-				device: 'android'
+				device: 'ios'
 			}), {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -514,7 +514,7 @@ renderCountries() {
 			{
 				'token': this.props.responseData.user.token,
 				'tag': 'initiate',
-				'device': 'android',
+				'device': 'ios',
 				'token': argToken,
 				'profileID': argProfileID,
 				'categoryID': argCategoryID,

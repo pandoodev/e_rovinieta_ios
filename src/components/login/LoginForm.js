@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Navigaor, Image, Alert, AppState, AsyncStorage, TextInput, Linking, AlertIOS,  PushNotificationIOS, NetInfo} from 'react-native';
+import { View, Text, Navigaor, Image, Alert, AppState, AsyncStorage, TextInput, Linking, AlertIOS, NetInfo} from 'react-native';
 import { LoginButton, Card, CardSection, Input, Spinner } from '../common';
 import axios from 'axios';
 import querystring from 'query-string';
@@ -8,23 +8,10 @@ import { Actions } from 'react-native-router-flux';
 import Header from '../common/Header';
 
 import PushController from "./PushController";
-var PushNotification = require('react-native-push-notification');
-
 
 class LoginForm extends Component {
 	
 	state = { username: '', password: '', error: '', loading: false, loggedIn: false, appState: null, isConnected: null };
-	
-	_sendLocalNotification() {
-		require('RCTDeviceEventEmitter').emit('localNotificationReceived', {
-			aps: {
-				alert: 'Sample local notification',
-				badge: '+1',
-				sound: 'default',
-				category: 'REACT_NATIVE'
-			},
-		});
-	}
 	
 	// START Storage Methods
 	_removeStorage = async (STORAGE_KEY_ARG) => {
@@ -60,61 +47,11 @@ class LoginForm extends Component {
 		}
 	}
 	
-	_onLocalNotification(notification){
-		AlertIOS.alert(
-		'Local Notification Received',
-		'Alert message: ' + notification.getMessage(),
-		[{
-			text: 'Dismiss',
-			onPress: null,
-		}]
-		);
-	}
 	componentWillMount() {
 		this.checkIfUserIsLoged();
-		PushNotificationIOS.addEventListener('localNotification', this._onLocalNotification);
-		
-		//PushNotificationIOS.addEventListener('register', this._onRegistered);
-		//PushNotificationIOS.addEventListener('registrationError', this._onRegistrationError);
-		//PushNotificationIOS.addEventListener('notification', this._onRemoteNotification);
-		PushNotificationIOS.requestPermissions();
-		//this.notification();
-		
-		
-		//this._sendLocalNotification();
-		
-		
+				
 	}
-	_onRemoteNotification(notification) {
-		AlertIOS.alert(
-		'Push Notification Received',
-		'Alert message: ' + notification.getMessage(),
-		[{
-			text: 'Dismiss',
-			onPress: null,
-		}]
-		);
-	}
-	_onRegistrationError(error) {
-		AlertIOS.alert(
-		'Failed To Register For Remote Push',
-		`Error (${error.code}): ${error.message}`,
-		[{
-			text: 'Dismiss',
-			onPress: null,
-		}]
-		);
-	}
-	_onRegistered(deviceToken) {
-		AlertIOS.alert(
-		'Registered For Remote Push',
-		`Device Token: ${deviceToken}`,
-		[{
-			text: 'Dismiss',
-			onPress: null,
-		}]
-		);
-	}
+
 	constructor(props) {
 		super(props);
 		//this.handleAppStateChange = this.handleAppStateChange.bind(this);
@@ -140,7 +77,6 @@ class LoginForm extends Component {
 		}
 		else {
 			AppState.addEventListener('change', this.handleAppStateChange);
-			//	this.notification();
 		}
 	}
 
@@ -177,12 +113,6 @@ class LoginForm extends Component {
 		
 	}
 	
-	notification() {
-		// PushNotification.localNotificationSchedule({
-			// 	message: "Notificare expirare rovinieta",
-			// 	date: new Date(Date.now() + (5 * 1000))
-			// });
-		}
 		
 		onButtonPress() {
 			
@@ -259,37 +189,6 @@ class LoginForm extends Component {
 				password: '',
 				loading: false,
 				error: ''
-			});
-			
-			console.log("Push-notification setup started!");
-			PushNotification.configure({
-				onNotification: function (notification) {
-					
-					console.log("ceva");
-				},
-				senderID: "145264640175",
-				// IOS ONLY (optional): default: all - Permissions to register.
-				permissions: {
-					alert: true,
-					badge: true,
-					sound: true
-				},
-				
-				onRegister: function(token) {
-					console.log( 'TOKEN:', token );
-				},
-				
-				// Should the initial notification be popped automatically
-				// default: true
-				popInitialNotification: true,
-				
-				/**
-				* (optional) default: true
-				* - Specified if permissions (ios) and token (android and ios) will requested or not,
-				* - if not, you must call PushNotificationsHandler.requestPermissions() later
-				*/
-				requestPermissions: true,
-				
 			});
 			
 			Actions.main({ responseData: response.data });
